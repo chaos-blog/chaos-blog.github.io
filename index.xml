@@ -6,43 +6,5 @@
     <description>Recent content on Chaos</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title></title>
-      <link>/posts/first-post/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/first-post/</guid>
-      <description>Test This is the first time I use Hugo. </description>
-      <content>&lt;h2 id=&#34;test&#34;&gt;Test&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;This is the first time I use Hugo.&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/posts/test-actions/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/test-actions/</guid>
-      <description>Test-2 This is the second post which I am using it to test my github-actions.</description>
-      <content>&lt;h2 id=&#34;test-2&#34;&gt;Test-2&lt;/h2&gt;
-&lt;p&gt;This is the second post which I am using it to test my github-actions.&lt;/p&gt;
-</content>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/posts/third-post/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/third-post/</guid>
-      <description>Test-3 This is the third post. I am using this article to test if the actions workflow works fine with third-party themes.</description>
-      <content>&lt;h1 id=&#34;test-3&#34;&gt;Test-3&lt;/h1&gt;
-&lt;p&gt;This is the third post. I am using this article to test if the actions workflow works fine with third-party themes.&lt;/p&gt;
-</content>
-    </item>
-    
   </channel>
 </rss>

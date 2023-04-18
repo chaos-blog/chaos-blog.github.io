@@ -13,6 +13,11 @@
       
       <guid>/posts/first-post/</guid>
       <description>Test This is the first time I use Hugo. </description>
+      <content>&lt;h2 id=&#34;test&#34;&gt;Test&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;This is the first time I use Hugo.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
     </item>
     
     <item>
@@ -22,6 +27,9 @@
       
       <guid>/posts/test-actions/</guid>
       <description>Test-2 This is the second post which I am using it to test my github-actions.</description>
+      <content>&lt;h2 id=&#34;test-2&#34;&gt;Test-2&lt;/h2&gt;
+&lt;p&gt;This is the second post which I am using it to test my github-actions.&lt;/p&gt;
+</content>
     </item>
     
   </channel>

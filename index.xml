@@ -32,5 +32,17 @@
 </content>
     </item>
     
+    <item>
+      <title></title>
+      <link>/posts/third-post/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/third-post/</guid>
+      <description>Test-3 This is the third post. I am using this article to test if the actions workflow works fine with third-party themes.</description>
+      <content>&lt;h1 id=&#34;test-3&#34;&gt;Test-3&lt;/h1&gt;
+&lt;p&gt;This is the third post. I am using this article to test if the actions workflow works fine with third-party themes.&lt;/p&gt;
+</content>
+    </item>
+    
   </channel>
 </rss>

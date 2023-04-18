@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>深度学习 :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="深度学习">
+<meta property="og:description" content="" />
+<meta property="og:url" content="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/index.xml" rel="alternate" type="application/rss+xml" title="Chaos" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/12/">model.zero_grad() VS. optimzer.zero_grad()</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/python/">Python</a>&nbsp;
+            
+            #<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            引言 在模型训练时，每个Batch反向传播完成后我们需要手动清除计算图上本次迭代的所有梯度 在阅读不同的代码时，总能看到不同的清空代码： model.zero_grad() optimizer.zero_grad() 正文 上述两种梯度清空的方式均有效，区别在于起作用的范围不同 model.zero_grad() 此时mdoel包含的所有参数上的梯度均被清空 optimizer.zero_grad() 此时该优化器中负责更新的模型参数上的梯度被清空，即不一定是全部的梯度被清空 若模型训练过程中只有一个优化器，即优化器构造时使用 optimizer = optim.Optimiers(model.parameters(), lr=args.lr) 此时上述两种梯度清空方式完全等价 总结 两种不同的梯度清零方式在多数场景下基本等价，其区别在于作用范围不同 对于多任务训练、多优化器的训练中，需要根据具体训练策略的不同对参数梯度进行不同作用范围的清空 
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/12/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/9/">Pytorch使用单机多卡训练</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/python/">Python</a>&nbsp;
+            
+            #<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            需求 对基于pytorch的深度学习模型进行多卡训练以加速训练过程 由于显卡版本过于老旧，安装配置NCCL工程量过于庞大，希望使用简单的pytorch代码实现单机多卡训练，不考虑多机多卡的显卡通信 训练完成后保存的checkpoint需要能够在任何设备上进行加载、推理 实现 训练 pytorch提供了简单的单机多卡训练api，只需要在初始化模型之后执行下列语句将模型复制到多卡上 # initiate multi-gpu training model = nn.DataParallel(model, device_ids=&lt;ids of the gpus you want to use&gt;) 其他操作与单卡训练完全一致 加载checkpoint 上述操作后保存的checkpoint如果按照常规方法直接进行加载会报错 RuntimeError: Error(s) in loading state_dict for &lt;ModelName&gt;: Missing key(s) in state_dict:... debug遍历后发现其实其状态字典是完全一致的，只是因为我们在训练过程中将模型定义为了多卡并行模型。这里只需要按照训练过程中转换为多卡模型的代码初始化当前模型结构即可，即执行： # initiate multi-gpu training model = nn.DataParallel(model, device_ids=&lt;ids of the gpus you want to use&gt;) 其他操作与征程推理完全一致，若不想使用多卡/只想使用cpu，只需要按照常规将device = torch.device(&quot;&lt;cpu/cuda:id&gt;&quot;)即可 Note：查阅资料过程中发现有解答建议使用参数强行忽略模型加载的错误torch.load(&lt;checkpoint&gt;, strict=False)，经测试，这样加载的模型啥也不是&hellip;不知道为什么pytorch官方要提供这个接口
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/9/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/20/">Pytorch单机多卡(DP)训练之后的模型“货不对板”</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/python/">Python</a>&nbsp;
+            
+            #<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            背景 之前介绍过Pytoch的单机多卡训练，当时采用的是内置的nn.DataParallel()方法 经过单机多卡训练的模型保存checkpoint之后再次加载需要同样使用DP()对模型进行封装之后才能正常加载，否则会报错状态词典的键值对不上 原因 经过DP()封装之后的模型，其状态词典分别添加了module.的前缀，例如原参数为hr_branch.conv_hr.1.layers.0.weight，封装之后变成了module.hr_branch.conv_hr.1.layers.0.weight。 解决方案 在加载状态词典之前将该前缀进行替换，得到纯净的状态词典，则不再需要重新对模型进行DP()封装 ckp_state_dict = torch.load(args.ckp, map_location=torch.device(&#34;cpu&#34;))[&#34;model&#34;] ckp_state = {} for k, v in ckp_state_dict.items(): k = k.replace(&#34;module.&#34;, &#34;&#34;) ckp_state[k] = v 参考 文章 
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/20/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/21/">不同发行版安装NVIDIA-container-runtime</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+            
+            #<a href="/tags/system/">System</a>&nbsp;
+            
+            #<a href="/tags/linux/">Linux</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            背景 NVIDIA-container-runtime是在docker容器中映射本机显卡必备的运行时 NVIDIA推出该工具之后搭配新版本的docker就不需要使用单独版本的docker启动支持显卡的容器 开始动手 添加安装源 官网比较难进，酌情查看
+Debian-based distributions Debian/Ubuntu/&hellip;
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \ sudo apt-key add - distribution=$(. /etc/os-release;echo $ID$VERSION_ID) curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \ sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list sudo apt-get update RHEL-based distributions CentOS/Fedora/Oracle/&hellip;
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID) curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.repo | \ sudo tee /etc/yum.repos.d/nvidia-container-runtime.repo 更新密钥 安装源来自于nvidia官网，可能会有些慢
+Debian-based distributions curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \ sudo apt-key add - RHEL-based distributions DIST=$(sed -n &#39;s/releasever=//p&#39; /etc/yum.conf) DIST=${DIST:-$(. /etc/os-release; echo $VERSION_ID)} sudo rpm -e gpg-pubkey-f796ecb0 sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/$DIST/nvidia-container-runtime/gpgdir --delete-key f796ecb0 安装 安装源来自于nvidia官网，可能会有些慢
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/21/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/5/">深度学习中的预训练与自训练</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/python/">Python</a>&nbsp;
+            
+            #<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            几个概念 预训练 自训练 自监督学习 半监督学习 监督学习 无监督学习 区分 预训练 广义上讲：是对一个模型进行“预先训练”，以完成后续的下游任务 狭义上讲（更常用）：在大规模无标注语料上，用自监督的方式训练模型 自训练 常应用于CV领域 有一个Teacher模型$M_{teacher}$和一个Student模型$M_{student}$，首先在标注数据上训练$M_{teacher}$，然后用它对大规模无标注数据进行标注，把得到的结果(与少量有标签数据混合)当做伪标注数据去训练$M_{student}$ 使用少量的标记数据和大量的未标记数据对模型进行联合训练 预训练与自训练是同级概念，其中分别可以与“监督/半监督/无监督/自监督”进行组合 监督与无监督 无监督的典型任务是聚类算法 半监督 没有太多意义的一个概念 其中的代表即自训练，甚至基本等同 自监督 是狭义上“预训练”的实现方法 与完全不受监督的设置相比，自监督学习使用数据集本身的信息来构造伪标签 是一种具有监督形式的特殊形式的非监督学习方法 
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/5/">Read more →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+      <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/page/2/" class="button next">
+        <span class="button__text">Older posts</span>
+        <span class="button__icon">→</span>
+      </a>
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on Chaos</title>
+    <link>/tags/linux/</link>
+    <description>Recent content in Linux on Chaos</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux下xargs的基本用法</title>
+      <link>/posts/22/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/22/</guid>
+      <description>背景需求 遇到一个需要使用scp/rsync向远端传送当前文件夹下前n个文件的需求，若要一个一个的手输也不是不行，但总感觉有一些蠢
+解决方案 xargs功能强大 xargs（英文全拼： eXtended ARGuments）是给命令传递参数的一个过滤器，也是组合多个命令的一个工具。 xargs 可以将管道或标准输入（stdin）数据转换成命令行参数，也能够从文件的输出中读取数据。 xargs 也可以将单行或多行文本输入转换为其他格式，例如多行变单行，单行变多行。 xargs 是一个强有力的命令，它能够捕获一个命令的输出，然后传递给另外一个命令。 详解 首先是要拿到该文件夹下的前n个文件 ls | head -100
+利用rsync向远端传输文件 rsync -avzP &amp;lt;file_names&amp;gt; user@remote
+使用xargs省去手动输入文件列表 ls | head -100 |xargs -i rsync -avzP {} user@remote
+注意事项 args 默认的命令是 echo，这意味着通过管道传递给 xargs 的输入将会包含换行和空白，不过通过 xargs 的处理，换行和空白将被空格取代。 xargs 一般是和管道一起使用。 </description>
+      <content>&lt;h2 id=&#34;背景需求&#34;&gt;背景需求&lt;/h2&gt;
+&lt;p&gt;遇到一个需要使用scp/rsync向远端传送当前文件夹下前n个文件的需求，若要一个一个的手输也不是不行，但总感觉有一些蠢&lt;/p&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;xargs功能强大&lt;/li&gt;
+&lt;li&gt;xargs（英文全拼： eXtended ARGuments）是给命令传递参数的一个过滤器，也是组合多个命令的一个工具。&lt;/li&gt;
+&lt;li&gt;xargs 可以将管道或标准输入（stdin）数据转换成命令行参数，也能够从文件的输出中读取数据。&lt;/li&gt;
+&lt;li&gt;xargs 也可以将单行或多行文本输入转换为其他格式，例如多行变单行，单行变多行。&lt;/li&gt;
+&lt;li&gt;xargs 是一个强有力的命令，它能够捕获一个命令的输出，然后传递给另外一个命令。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;详解&#34;&gt;详解&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;首先是要拿到该文件夹下的前n个文件
+&lt;code&gt;ls | head -100&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;利用rsync向远端传输文件
+&lt;code&gt;rsync -avzP &amp;lt;file_names&amp;gt; user@remote&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使用xargs省去手动输入文件列表
+&lt;code&gt;ls | head -100 |xargs -i rsync -avzP {} user@remote&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;注意事项&#34;&gt;注意事项&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;args 默认的命令是 echo，这意味着通过管道传递给 xargs 的输入将会包含换行和空白，不过通过 xargs 的处理，换行和空白将被空格取代。&lt;/li&gt;
+&lt;li&gt;xargs 一般是和管道一起使用。&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>不同发行版安装NVIDIA-container-runtime</title>
+      <link>/posts/21/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/21/</guid>
+      <description>背景 NVIDIA-container-runtime是在docker容器中映射本机显卡必备的运行时 NVIDIA推出该工具之后搭配新版本的docker就不需要使用单独版本的docker启动支持显卡的容器 开始动手 添加安装源 官网比较难进，酌情查看
+Debian-based distributions Debian/Ubuntu/&amp;hellip;
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \ sudo apt-key add - distribution=$(. /etc/os-release;echo $ID$VERSION_ID) curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \ sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list sudo apt-get update RHEL-based distributions CentOS/Fedora/Oracle/&amp;hellip;
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID) curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.repo | \ sudo tee /etc/yum.repos.d/nvidia-container-runtime.repo 更新密钥 安装源来自于nvidia官网，可能会有些慢
+Debian-based distributions curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \ sudo apt-key add - RHEL-based distributions DIST=$(sed -n &amp;#39;s/releasever=//p&amp;#39; /etc/yum.conf) DIST=${DIST:-$(. /etc/os-release; echo $VERSION_ID)} sudo rpm -e gpg-pubkey-f796ecb0 sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/$DIST/nvidia-container-runtime/gpgdir --delete-key f796ecb0 安装 安装源来自于nvidia官网，可能会有些慢</description>
+      <content>&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;NVIDIA-container-runtime&lt;/strong&gt;是在docker容器中映射本机显卡必备的运行时&lt;/li&gt;
+&lt;li&gt;NVIDIA推出该工具之后搭配新版本的docker就不需要使用单独版本的docker启动支持显卡的容器&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;开始动手&#34;&gt;开始动手&lt;/h2&gt;
+&lt;h3 id=&#34;添加安装源&#34;&gt;添加安装源&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://nvidia.github.io/nvidia-container-runtime/&#34;&gt;官网&lt;/a&gt;比较难进，酌情查看&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;debian-based-distributions&#34;&gt;Debian-based distributions&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Debian/Ubuntu/&amp;hellip;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;  sudo apt-key add -
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;distribution&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;. /etc/os-release;echo $ID$VERSION_ID&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;  sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt-get update
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;rhel-based-distributions&#34;&gt;RHEL-based distributions&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;CentOS/Fedora/Oracle/&amp;hellip;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;distribution&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;. /etc/os-release;echo $ID$VERSION_ID&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.repo | &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;  sudo tee /etc/yum.repos.d/nvidia-container-runtime.repo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;更新密钥&#34;&gt;更新密钥&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;安装源来自于nvidia官网，可能会有些慢&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;debian-based-distributions-1&#34;&gt;Debian-based distributions&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;  sudo apt-key add -
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;rhel-based-distributions-1&#34;&gt;RHEL-based distributions&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;DIST&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;sed -n &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s/releasever=//p&amp;#39;&lt;/span&gt; /etc/yum.conf&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;DIST&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;DIST&lt;span style=&#34;color:#66d9ef&#34;&gt;:-$(&lt;/span&gt;. /etc/os-release; echo $VERSION_ID&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo rpm -e gpg-pubkey-f796ecb0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo gpg --homedir /var/lib/yum/repos/&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;uname -m&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;/$DIST/nvidia-container-runtime/gpgdir --delete-key f796ecb0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;安装&#34;&gt;安装&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;安装源来自于nvidia官网，可能会有些慢&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;debian-based-distributions-2&#34;&gt;Debian-based distributions&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt-get install nvidia-container-runtime
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;rhel-based-distributions-2&#34;&gt;RHEL-based distributions&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo yum install nvidia-container-runtime
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/NVIDIA/nvidia-container-runtime&#34;&gt;NVIDIA container runtime repository&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://nvidia.github.io/nvidia-container-runtime/&#34;&gt;NVIDIA container runtime distributions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>简单的shell脚本搭配Crontab实现linux定时备份设定文件(夹)</title>
+      <link>/posts/18/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/18/</guid>
+      <description>场景 自用linux系统装在一块不是太稳定的硬盘里，很多服务启动脚本、docker容器脚本需要定期备份到另一块硬盘上 硬连接不适用于文件夹、跨盘连接 软链接在源文件丢失、挂掉的情况下会失效 解决方案 使用简单的一个shell脚本向目标位置复制需要备份的文件（夹） crontab是linux提供的定时任务，搭配上述脚本实现每xx时间自动执行shell脚本 脚本 services=( \ &amp;#34;path/to/some/file/or/folder&amp;#34; \ &amp;#34;path/to/another/file/or/folder&amp;#34; \ ) destination=&amp;#34;/path/to/destination/folder/&amp;#34; for elem in ${services[@]} do echo &amp;#34;# Backuping $elem&amp;#34; cp -r $elem $destination done echo &amp;#34;--------------------------------&amp;#34; date echo &amp;#34;- All backup task completed! -&amp;#34; echo &amp;#34;--------------------------------&amp;#34; echo &amp;#34;--------------------------------&amp;#34; echo -e &amp;#34;\n\n&amp;#34; 设置定时任务 打开定时任务编辑 crontab -e 添加任务 # backup all of my services at 3:50 every day 50 3 * * * bash /path/to/backup_services.sh &amp;gt;&amp;gt; /path/to/backup.</description>
+      <content>&lt;h1 id=&#34;场景&#34;&gt;场景&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;自用linux系统装在一块不是太稳定的硬盘里，很多服务启动脚本、docker容器脚本需要定期备份到另一块硬盘上&lt;/li&gt;
+&lt;li&gt;硬连接不适用于文件夹、跨盘连接&lt;/li&gt;
+&lt;li&gt;软链接在源文件丢失、挂掉的情况下会失效&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;解决方案&#34;&gt;解决方案&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;使用简单的一个shell脚本向目标位置复制需要备份的文件（夹）&lt;/li&gt;
+&lt;li&gt;crontab是linux提供的定时任务，搭配上述脚本实现每xx时间自动执行shell脚本&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;脚本&#34;&gt;脚本&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; services&lt;span style=&#34;color:#f92672&#34;&gt;=(&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;path/to/some/file/or/folder&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;path/to/another/file/or/folder&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;destination&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/path/to/destination/folder/&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; elem in &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;services[@]&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;# Backuping &lt;/span&gt;$elem&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    cp -r $elem $destination
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;--------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;date
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;- All backup task completed! -&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;--------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;--------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo -e &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\n\n&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;设置定时任务&#34;&gt;设置定时任务&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;打开定时任务编辑 &lt;code&gt;crontab -e&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;添加任务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# backup all of my services at 3:50 every day&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; * * * bash /path/to/backup_services.sh &amp;gt;&amp;gt; /path/to/backup.logs 2&amp;gt;&amp;amp;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &amp;amp;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;保存查看&lt;code&gt;crontab -l&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

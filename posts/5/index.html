@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>深度学习中的预训练与自训练 :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="几个概念 预训练 自训练 自监督学习 半监督学习 监督学习 无监督学习 区分 预训练 广义上讲：是对一个模型进行“预先训练”，以完成后续的下游任务 狭义上讲（更常用）：在大规模无标注语料上，用自监督的方式训练模型 自训练 常应用于CV领域 有一个Teacher模型$M_{teacher}$和一个Student模型$M_{student}$，首先在标注数据上训练$M_{teacher}$，然后用它对大规模无标注数据进行标注，把得到的结果(与少量有标签数据混合)当做伪标注数据去训练$M_{student}$ 使用少量的标记数据和大量的未标记数据对模型进行联合训练 预训练与自训练是同级概念，其中分别可以与“监督/半监督/无监督/自监督”进行组合 监督与无监督 无监督的典型任务是聚类算法 半监督 没有太多意义的一个概念 其中的代表即自训练，甚至基本等同 自监督 是狭义上“预训练”的实现方法 与完全不受监督的设置相比，自监督学习使用数据集本身的信息来构造伪标签 是一种具有监督形式的特殊形式的非监督学习方法 " />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/5/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="chaos" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="深度学习中的预训练与自训练">
+<meta property="og:description" content="几个概念 预训练 自训练 自监督学习 半监督学习 监督学习 无监督学习 区分 预训练 广义上讲：是对一个模型进行“预先训练”，以完成后续的下游任务 狭义上讲（更常用）：在大规模无标注语料上，用自监督的方式训练模型 自训练 常应用于CV领域 有一个Teacher模型$M_{teacher}$和一个Student模型$M_{student}$，首先在标注数据上训练$M_{teacher}$，然后用它对大规模无标注数据进行标注，把得到的结果(与少量有标签数据混合)当做伪标注数据去训练$M_{student}$ 使用少量的标记数据和大量的未标记数据对模型进行联合训练 预训练与自训练是同级概念，其中分别可以与“监督/半监督/无监督/自监督”进行组合 监督与无监督 无监督的典型任务是聚类算法 半监督 没有太多意义的一个概念 其中的代表即自训练，甚至基本等同 自监督 是狭义上“预训练”的实现方法 与完全不受监督的设置相比，自监督学习使用数据集本身的信息来构造伪标签 是一种具有监督形式的特殊形式的非监督学习方法 " />
+<meta property="og:url" content="/posts/5/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/5/">深度学习中的预训练与自训练</a>
+  </h1>
+  <div class="post-meta">
+    
+    
+      <span class="post-author">chaos</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (25 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/python/">Python</a>&nbsp;
+      
+      #<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+    <div class="table-of-contents">
+      <h2>
+        目录
+      </h2>
+      <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#几个概念">几个概念</a></li>
+        <li><a href="#区分">区分</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  
+
+  <div class="post-content"><div>
+        <h3 id="几个概念">几个概念<a href="#几个概念" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>预训练</li>
+<li>自训练</li>
+<li>自监督学习</li>
+<li>半监督学习</li>
+<li>监督学习</li>
+<li>无监督学习</li>
+</ul>
+<h3 id="区分">区分<a href="#区分" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h4 id="预训练">预训练<a href="#预训练" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>广义上讲：是对一个模型进行“预先训练”，以完成后续的下游任务</li>
+<li>狭义上讲（更常用）：在大规模无标注语料上，用自监督的方式训练模型</li>
+</ul>
+<h4 id="自训练">自训练<a href="#自训练" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>常应用于CV领域</li>
+<li>有一个Teacher模型$M_{teacher}$和一个Student模型$M_{student}$，首先在标注数据上训练$M_{teacher}$，然后用它对大规模无标注数据进行标注，把得到的结果(与少量有标签数据混合)当做伪标注数据去训练$M_{student}$</li>
+<li>使用少量的标记数据和大量的未标记数据对模型进行联合训练
+<strong>预训练与自训练是同级概念，其中分别可以与“监督/半监督/无监督/自监督”进行组合</strong></li>
+</ul>
+<h4 id="监督与无监督">监督与无监督<a href="#监督与无监督" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>无监督的典型任务是<strong>聚类算法</strong></li>
+</ul>
+<h4 id="半监督">半监督<a href="#半监督" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>没有太多意义的一个概念</li>
+<li>其中的代表即自训练，甚至基本等同</li>
+</ul>
+<h4 id="自监督">自监督<a href="#自监督" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>是狭义上“预训练”的实现方法</li>
+<li>与完全不受监督的设置相比，自监督学习使用数据集本身的信息来构造伪标签</li>
+<li>是一种具有监督形式的特殊形式的非监督学习方法</li>
+</ul>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/2/">
+                <span class="button__icon">←</span>
+                <span class="button__text">关于python协程销毁、超时</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/posts/7/">
+                <span class="button__text">深度神经网络中seed函数</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>不同Linux发行版添加新用户并设置权限 :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="背景 由于一些需求，需要给服务器添加一个新用户并设置sudo权限 之前从未进行过该方面的学习，找到一个非常详细的博文，故记录一下 该随笔会保持更新，收录多种发行版下对用户账号的操作 Ubuntu 18.04 添加新用户 sudo useradd -r -m -s &amp;lt;新用户要使用的shell&amp;gt; &amp;lt;新用户名&amp;gt;
+参数解析 -r 建立系统账号 -m 自动建立用户的登入目录/home/&amp;lt;user_name&amp;gt; -s 指定用户登入后使用的shell 设置密码 ubuntu新创建的用户不会自动提示设置密码
+sudo passwd &amp;lt;user_name&amp;gt;
+设置用户权限 使用修改/etc/sudoers文件的方式将新用户加入sudo列表
+默认/etc/sudoers不可编辑，首先修改权限chmod &#43;w /etc/sudoers 增加新用户 sudo nano /etc/sudoers # 适当位置添加 &amp;lt;uer_name&amp;gt; ALL=(ALL:ALL) ALL 保存生效 删除用户 执行删除命令sudo userdel &amp;lt;user_name&amp;gt; 删除用户目录sudo rm -rf /home/&amp;lt;user_name&amp;gt; 移除/etc/sudoers中关于&amp;lt;user_name&amp;gt;的权限设置，否则无法创建新的同名用户 参考 Ubuntu创建新用户的正确姿势 Debian 10.2 创建用户 sudo adduser &amp;lt;user_name&amp;gt; 执行完上述命令后，系统会提示设置该用户的密码、个人信息等 授权用户sudo 使用修改/etc/sudoers文件的方式将该用户加入sudo组以授权超级权限
+授权sudoers文件可编辑sudo chmod &#43;w /etc/sudoers 增加新用户 sudo nano /etc/sudoers # 适当位置添加 &amp;lt;uer_name&amp;gt; ALL=(ALL:ALL) ALL 保存生效 删除用户 deluser --remove-home &amp;lt;user_name&amp;gt;" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/8/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="chaos" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="不同Linux发行版添加新用户并设置权限">
+<meta property="og:description" content="背景 由于一些需求，需要给服务器添加一个新用户并设置sudo权限 之前从未进行过该方面的学习，找到一个非常详细的博文，故记录一下 该随笔会保持更新，收录多种发行版下对用户账号的操作 Ubuntu 18.04 添加新用户 sudo useradd -r -m -s &amp;lt;新用户要使用的shell&amp;gt; &amp;lt;新用户名&amp;gt;
+参数解析 -r 建立系统账号 -m 自动建立用户的登入目录/home/&amp;lt;user_name&amp;gt; -s 指定用户登入后使用的shell 设置密码 ubuntu新创建的用户不会自动提示设置密码
+sudo passwd &amp;lt;user_name&amp;gt;
+设置用户权限 使用修改/etc/sudoers文件的方式将新用户加入sudo列表
+默认/etc/sudoers不可编辑，首先修改权限chmod &#43;w /etc/sudoers 增加新用户 sudo nano /etc/sudoers # 适当位置添加 &amp;lt;uer_name&amp;gt; ALL=(ALL:ALL) ALL 保存生效 删除用户 执行删除命令sudo userdel &amp;lt;user_name&amp;gt; 删除用户目录sudo rm -rf /home/&amp;lt;user_name&amp;gt; 移除/etc/sudoers中关于&amp;lt;user_name&amp;gt;的权限设置，否则无法创建新的同名用户 参考 Ubuntu创建新用户的正确姿势 Debian 10.2 创建用户 sudo adduser &amp;lt;user_name&amp;gt; 执行完上述命令后，系统会提示设置该用户的密码、个人信息等 授权用户sudo 使用修改/etc/sudoers文件的方式将该用户加入sudo组以授权超级权限
+授权sudoers文件可编辑sudo chmod &#43;w /etc/sudoers 增加新用户 sudo nano /etc/sudoers # 适当位置添加 &amp;lt;uer_name&amp;gt; ALL=(ALL:ALL) ALL 保存生效 删除用户 deluser --remove-home &amp;lt;user_name&amp;gt;" />
+<meta property="og:url" content="/posts/8/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/8/">不同Linux发行版添加新用户并设置权限</a>
+  </h1>
+  <div class="post-meta">
+    
+    
+      <span class="post-author">chaos</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (79 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/system/">System</a>&nbsp;
+      
+      #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+    <div class="table-of-contents">
+      <h2>
+        目录
+      </h2>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#ubuntu-1804">Ubuntu 18.04</a>
+      <ul>
+        <li><a href="#添加新用户">添加新用户</a></li>
+        <li><a href="#参数解析">参数解析</a></li>
+        <li><a href="#设置密码">设置密码</a></li>
+        <li><a href="#设置用户权限">设置用户权限</a></li>
+        <li><a href="#删除用户">删除用户</a></li>
+        <li><a href="#参考">参考</a></li>
+      </ul>
+    </li>
+    <li><a href="#debian-102">Debian 10.2</a>
+      <ul>
+        <li><a href="#创建用户">创建用户</a></li>
+        <li><a href="#授权用户sudo">授权用户sudo</a></li>
+        <li><a href="#删除用户-1">删除用户</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  
+
+  <div class="post-content"><div>
+        <h2 id="背景">背景<a href="#背景" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>由于一些需求，需要给服务器添加一个新用户并设置sudo权限</li>
+<li>之前从未进行过该方面的学习，找到一个非常详细的博文，故记录一下</li>
+<li>该随笔会保持更新，收录多种发行版下对用户账号的操作</li>
+</ul>
+<h2 id="ubuntu-1804">Ubuntu 18.04<a href="#ubuntu-1804" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="添加新用户">添加新用户<a href="#添加新用户" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p><code>sudo useradd -r -m -s &lt;新用户要使用的shell&gt; &lt;新用户名&gt;</code></p>
+<h3 id="参数解析">参数解析<a href="#参数解析" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>-r 建立系统账号
+</span></span><span style="display:flex;"><span>-m 自动建立用户的登入目录/home/&lt;user_name&gt;
+</span></span><span style="display:flex;"><span>-s 指定用户登入后使用的shell
+</span></span></code></pre></div><h3 id="设置密码">设置密码<a href="#设置密码" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<blockquote>
+<p>ubuntu新创建的用户不会自动提示设置密码</p>
+</blockquote>
+<p><code>sudo passwd &lt;user_name&gt;</code></p>
+<h3 id="设置用户权限">设置用户权限<a href="#设置用户权限" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<blockquote>
+<p>使用修改<code>/etc/sudoers</code>文件的方式将新用户加入sudo列表</p>
+</blockquote>
+<ul>
+<li>默认<code>/etc/sudoers</code>不可编辑，首先修改权限<code>chmod +w /etc/sudoers</code></li>
+<li>增加新用户</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo nano /etc/sudoers
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 适当位置添加</span>
+</span></span><span style="display:flex;"><span>&lt;uer_name&gt; ALL<span style="color:#f92672">=(</span>ALL:ALL<span style="color:#f92672">)</span> ALL
+</span></span></code></pre></div><ul>
+<li>保存生效</li>
+</ul>
+<h3 id="删除用户">删除用户<a href="#删除用户" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>执行删除命令<code>sudo userdel &lt;user_name&gt;</code></li>
+<li>删除用户目录<code>sudo rm -rf /home/&lt;user_name&gt;</code></li>
+<li>移除<code>/etc/sudoers</code>中关于&lt;user_name&gt;的权限设置，否则无法创建新的同名用户</li>
+</ul>
+<h3 id="参考">参考<a href="#参考" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li><a href="https://www.jianshu.com/p/1e4afd31958c">Ubuntu创建新用户的正确姿势</a></li>
+</ul>
+<h2 id="debian-102">Debian 10.2<a href="#debian-102" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="创建用户">创建用户<a href="#创建用户" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo adduser &lt;user_name&gt;
+</span></span></code></pre></div><ul>
+<li>执行完上述命令后，系统会提示设置该用户的密码、个人信息等</li>
+</ul>
+<h3 id="授权用户sudo">授权用户sudo<a href="#授权用户sudo" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<blockquote>
+<p>使用修改<code>/etc/sudoers</code>文件的方式将该用户加入sudo组以授权超级权限</p>
+</blockquote>
+<ul>
+<li>授权sudoers文件可编辑<code>sudo chmod +w /etc/sudoers</code></li>
+<li>增加新用户</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo nano /etc/sudoers
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 适当位置添加</span>
+</span></span><span style="display:flex;"><span>&lt;uer_name&gt; ALL<span style="color:#f92672">=(</span>ALL:ALL<span style="color:#f92672">)</span> ALL
+</span></span></code></pre></div><ul>
+<li>保存生效</li>
+</ul>
+<h3 id="删除用户-1">删除用户<a href="#删除用户-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p><code>deluser --remove-home &lt;user_name&gt;</code></p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/11/">
+                <span class="button__icon">←</span>
+                <span class="button__text">windows平台下配置Texlive&#43;Texstudio书写LaTex文本</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/posts/21/">
+                <span class="button__text">不同发行版安装NVIDIA-container-runtime</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Docker :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/tags/docker/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Docker">
+<meta property="og:description" content="" />
+<meta property="og:url" content="/tags/docker/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/docker/index.xml" rel="alternate" type="application/rss+xml" title="Chaos" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/4/">使用Docker将python应用打包为images</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/%E5%88%86%E4%BA%AB/">分享</a>&nbsp;
+            
+            #<a href="/tags/docker/">Docker</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            需求描述 正常运行的sanic应用需要进行服务器迁移，首先想到的当然是通过docker 基本步骤 编写dockerfile 这里非必须在应用根目录下进行dockerfile的建立及编写，但是为了后续方便，强烈建议
+在应用根目录新建Dockerfile文件 touch Dockerfile 内容 # 基础镜像，这里选用python3.8 FROM python:3.8 # 维护者（非必需） MAINTAINER &lt;your_name&gt; &lt;your_email&gt; # 指定工作目录 WORKDIR / # 将应用所需文件拷贝到容器中 COPY . / # 安装必要的python三方库，建议提前生成一个依赖库列表，为了后续的构建方便 # 这里推荐使用pipreqs三方库生成，这样能够最小化使用到的库数量 RUN pip install -r requirements.txt -i https://pypi.doubanio.com/simple # 暴露容器端口 EXPOSE &lt;port_used&gt;/tcp # 执行docker run会执行的命令，按照空格进行分割 CMD [&#34;python&#34;, &#34;/run.py&#34;] 构建docker镜像 docker build -t &lt;image_name&gt; &lt;Dockerfile_path&gt; // 这里需要强调的是 &lt;Dockerfile_path&gt; 一定需要是一个目录，而不是dockerfile本身 其他 将镜像打包为tar文件，方便迁移 docker save -o &lt;file_name.tar&gt; &lt;image_name&gt; 将迁移的tar文件导入为镜像 docker load --input &lt;file_name.tar&gt; 
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/4/">Read more →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

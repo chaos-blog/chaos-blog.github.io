@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>日常使用 :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="日常使用">
+<meta property="og:description" content="" />
+<meta property="og:url" content="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/index.xml" rel="alternate" type="application/rss+xml" title="Chaos" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/17/">使用wireguard&amp;wg-easy快速实现异地组网</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/system/">System</a>&nbsp;
+            
+            #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            背景 WireGuard：是一个现代化的基于Linux内核态运行的高效、优雅的跨平台VPN实现方案；底层协议采用UDP进行数据传输 wg-easy：是一个使用Vue+wireguard开发的快速启动、管理、监控wg服务的docker镜像 需求： 异地组网：n台互相在异地的机器相互组成一个局域网并各自拥有自己在该虚拟内网中的独立ip地址，实现无障碍安全互访 无公网ip：这里不做标题党，具体的网络拓扑是： 1台具备公网ip的服务器 n-1台不具备公网ip并且藏在无数层NAT之后的机器 解决方案 总体思路 使用具备公网ip的服务器作为wg服务端，所有在vpn内的机器直接通过该设备进行流量转发 wg-easy启动在公网ip服务器，并统一通过面板为客户机下发配置文件 其他设备直接本机安装wg作为客户端 启动服务端（具备公网ip的机器） 这里采用docker-compose的方式进行启动，由于wg-easy具备一个漂亮的管理面板，故使用traefik对其进行管理
+建立启动配置文件 version: &#34;3.8&#34; services: wg-easy: environment: # ⚠️ Required: # Change this to your host&#39;s public address - WG_HOST=&lt;ur host domain&gt; # - WG_DEFAULT_DNS=192.168.2.1 - WG_ALLOWED_IPS=&lt;set default ACL in the clients&gt; # Optional: - PASSWORD=&lt;web ui&#39;s password&gt; # - WG_PORT=51820 - WG_DEFAULT_ADDRESS=10.8.0.x # - WG_MTU=1420 image: weejewel/wg-easy container_name: wg_easy volumes: - &lt;path_to_host&gt;:/etc/wireguard # ports: # - &#34;51820:51820/udp&#34; # control port(main) # - &#34;51821:51821/tcp&#34; # web ui port network_mode: &#34;host&#34; # ⚠️Required restart: unless-stopped cap_add: - NET_ADMIN - SYS_MODULE labels: - traefik.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/17/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/15/">使用zerotier-one搭配anyproxy保障多种方式回内网</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/system/">System</a>&nbsp;
+            
+            #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            背景 之前写过怎么在win平台使用frp搭配zerotierone搭建回校内网，详见这里 但是pc经常会出现关机等等意外情况，同时frp一定需要一台公网服务器，受限于国内带宽的高价，有时候该种解决方案并不是最优 本次介绍一种使用zerotier-one的官方服务进行内网组建同时搭配anyproxy的vpn方法 刚好趁此机会介绍一下在linux下的anyproxy的安装配置 产品简介 anyproxy 跨平台基于nodejs的快速http代理工具，不多介绍 zerotier-one 一款全平台的vpn子网组件工具 该工具会自动在转发、直通、p2p等方式中选择最优方案进行子网组建 官方提供转发服务器，虽然是在境外（速度相对较慢）但是聊胜于无，免费账号可以同时加入100台机器（甚至对于一个小团队都是够用的），不限制子网数量 动手吧！ 安装anyproxy 首先确保有npm工具： npm -v 直接进行一个安装 sudo npm install anyproxy -g 启动测试 anyproxy --port &lt;proxy port u wanna use&gt; 配置开机启动 防止机器断电，还是配置一下开机自启比较好 为了方便（其实是我只会这一种），这里使用systemd的方式配置开机自启 具体systemd是什么请自行google，这里只需要知道该守护程序有两个可以放置配置文件的地方：/etc/systemd/system/或者/usr/lib/systemd/system/ 创建服务文件 sudo touch /usr/lib/systemd/system/anyproxy.service 编写服务文件(复制记得删除注释) [Unit] Description=Initiate the anyproxy server # 给出一个详细描述 After=network-online.target # 固定 [Service] Type=simple # 固定 ExecStart=/bin/bash &lt;abspath_to_init.sh&gt; # 需要将anyproxy的启动写成一个sh脚本，并放在任意位置，chmod给执行权限 Restart=on-abort # 固定 User=root # 固定 [Install] # 固定 WantedBy=default.target # 固定 重载 sudo systemctl daemon-reload 启动 sudo systemctl start anyproxy 查看运行状态 sudo systemclt status anyproxy 设置开机自启 sudo systemctl enable anyproxy 安装配置zerotier-one 下载 这里下载并安装 注册并创建一个子网 这里使用你喜欢的方式注册登录zerotier 点击Create A Network，稍等片刻点击进入创建好的子网 起一个喜欢的名字，其他保持默认即可 记下来最上边的Network ID，这个后边会用 加入网络 Linux 执行下列命令加入刚刚创建的子网 sudo zerotier-cli join &lt;Network ID&gt; 稍等片刻，回到网页后台会发现在Members区域出现了刚刚加入的机器，但是zerotier默认新加入的机器没有任何ip分配权限，需要点击最前边Auth?
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/15/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/18/">简单的shell脚本搭配Crontab实现linux定时备份设定文件(夹)</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+            
+            #<a href="/tags/linux/">Linux</a>&nbsp;
+            
+            #<a href="/tags/%E7%B3%BB%E7%BB%9F/">系统</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            场景 自用linux系统装在一块不是太稳定的硬盘里，很多服务启动脚本、docker容器脚本需要定期备份到另一块硬盘上 硬连接不适用于文件夹、跨盘连接 软链接在源文件丢失、挂掉的情况下会失效 解决方案 使用简单的一个shell脚本向目标位置复制需要备份的文件（夹） crontab是linux提供的定时任务，搭配上述脚本实现每xx时间自动执行shell脚本 脚本 services=( \ &#34;path/to/some/file/or/folder&#34; \ &#34;path/to/another/file/or/folder&#34; \ ) destination=&#34;/path/to/destination/folder/&#34; for elem in ${services[@]} do echo &#34;# Backuping $elem&#34; cp -r $elem $destination done echo &#34;--------------------------------&#34; date echo &#34;- All backup task completed! -&#34; echo &#34;--------------------------------&#34; echo &#34;--------------------------------&#34; echo -e &#34;\n\n&#34; 设置定时任务 打开定时任务编辑 crontab -e 添加任务 # backup all of my services at 3:50 every day 50 3 * * * bash /path/to/backup_services.sh &gt;&gt; /path/to/backup.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/18/">Read more →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+      <a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/" class="button previous">
+        <span class="button__icon">←</span>
+        <span class="button__text">Newer posts</span>
+      </a>
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

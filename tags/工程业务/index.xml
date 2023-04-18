@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>工程业务 on Chaos</title>
+    <link>/tags/%E5%B7%A5%E7%A8%8B%E4%B8%9A%E5%8A%A1/</link>
+    <description>Recent content in 工程业务 on Chaos</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="/tags/%E5%B7%A5%E7%A8%8B%E4%B8%9A%E5%8A%A1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>关于python协程销毁、超时</title>
+      <link>/posts/2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2/</guid>
+      <description>概念 协程 通过async/await语法进行声明，是书写python异步应用的推荐方式 可等待对象 如果一个对象可以在await中使用，那么它就是可等待/awaitable对象 类型：协程、任务、Future async.sleep(delay, result=None, *, loop=None) 阻塞delay指定的秒数 sleep()总是为挂起当前任务，以允许其他任务运行 场景 Sanic后台任务执行失败被挂起，不报错，影响后续任务的进行 解决方案 对后台任务中可能出现失败的协程增设超时 asyncio.wait_for(aw,, timeout, *, loop=None) 等待aw可等待对象完成，指定timeout秒数后超时取消 timeout可以为None，也可以为float/int数值表示的等待秒数。如果timeout为None，则等待直到协程返回 如果发生超时，任务将取消并引发asyncio.TimeoutError 要避免任务取消，可以加上shield() 简单等待 asyncio.wait(aws, *, loop=None, return_when=ALL_CONPLETED) 并发地运行aws可迭代对象中的可等待对象并进入阻塞状态直到满足return_when所执行的条件 aws可迭代对象必须不为空 此函数不会引发asyncio.TimeoutError，当超时发生时，未完成的Future/Task将在指定秒数后返回；与wait_for()不同，wait()在超时后不会取消可等待对象 </description>
+      <content>&lt;h2 id=&#34;概念&#34;&gt;概念&lt;/h2&gt;
+&lt;h3 id=&#34;协程&#34;&gt;协程&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;通过async/await语法进行声明，是书写python异步应用的推荐方式&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;可等待对象&#34;&gt;可等待对象&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;如果一个对象可以在await中使用，那么它就是可等待/awaitable对象
+&lt;ul&gt;
+&lt;li&gt;类型：协程、任务、Future&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;asyncsleepdelay-resultnone--loopnone&#34;&gt;async.sleep(delay, result=None, *, loop=None)&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;阻塞delay指定的秒数&lt;/li&gt;
+&lt;li&gt;sleep()总是为挂起当前任务，以允许其他任务运行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;场景&#34;&gt;场景&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Sanic后台任务执行失败被挂起，不报错，影响后续任务的进行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;h3 id=&#34;对后台任务中可能出现失败的协程增设font-colorred超时font&#34;&gt;对后台任务中可能出现失败的协程增设&lt;!-- raw HTML omitted --&gt;超时&lt;!-- raw HTML omitted --&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;asyncio.wait_for(aw,, timeout, *, loop=None)
+&lt;ul&gt;
+&lt;li&gt;等待aw可等待对象完成，指定timeout&lt;strong&gt;秒&lt;/strong&gt;数后超时取消&lt;/li&gt;
+&lt;li&gt;timeout可以为None，也可以为float/int数值表示的等待秒数。如果timeout为None，则等待直到协程返回&lt;/li&gt;
+&lt;li&gt;如果发生超时，任务将取消并引发asyncio.TimeoutError&lt;/li&gt;
+&lt;li&gt;要避免任务取消，可以加上shield()&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;简单等待&#34;&gt;简单等待&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;asyncio.wait(aws, *, loop=None, return_when=ALL_CONPLETED)
+&lt;ul&gt;
+&lt;li&gt;并发地运行aws可迭代对象中的可等待对象并进入阻塞状态直到满足return_when所执行的条件&lt;/li&gt;
+&lt;li&gt;aws可迭代对象必须不为空&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;此函数不会引发asyncio.TimeoutError，当超时发生时，未完成的Future/Task将在指定秒数后返回；与&lt;code&gt;wait_for()&lt;/code&gt;不同，&lt;code&gt;wait()&lt;/code&gt;在超时后不会取消可等待对象&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

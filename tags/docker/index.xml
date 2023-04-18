@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on Chaos</title>
+    <link>/tags/docker/</link>
+    <description>Recent content in Docker on Chaos</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用Docker将python应用打包为images</title>
+      <link>/posts/4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/4/</guid>
+      <description>需求描述 正常运行的sanic应用需要进行服务器迁移，首先想到的当然是通过docker 基本步骤 编写dockerfile 这里非必须在应用根目录下进行dockerfile的建立及编写，但是为了后续方便，强烈建议
+在应用根目录新建Dockerfile文件 touch Dockerfile 内容 # 基础镜像，这里选用python3.8 FROM python:3.8 # 维护者（非必需） MAINTAINER &amp;lt;your_name&amp;gt; &amp;lt;your_email&amp;gt; # 指定工作目录 WORKDIR / # 将应用所需文件拷贝到容器中 COPY . / # 安装必要的python三方库，建议提前生成一个依赖库列表，为了后续的构建方便 # 这里推荐使用pipreqs三方库生成，这样能够最小化使用到的库数量 RUN pip install -r requirements.txt -i https://pypi.doubanio.com/simple # 暴露容器端口 EXPOSE &amp;lt;port_used&amp;gt;/tcp # 执行docker run会执行的命令，按照空格进行分割 CMD [&amp;#34;python&amp;#34;, &amp;#34;/run.py&amp;#34;] 构建docker镜像 docker build -t &amp;lt;image_name&amp;gt; &amp;lt;Dockerfile_path&amp;gt; // 这里需要强调的是 &amp;lt;Dockerfile_path&amp;gt; 一定需要是一个目录，而不是dockerfile本身 其他 将镜像打包为tar文件，方便迁移 docker save -o &amp;lt;file_name.tar&amp;gt; &amp;lt;image_name&amp;gt; 将迁移的tar文件导入为镜像 docker load --input &amp;lt;file_name.tar&amp;gt; </description>
+      <content>&lt;h2 id=&#34;需求描述&#34;&gt;需求描述&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;正常运行的sanic应用需要进行服务器迁移，首先想到的当然是通过docker&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;基本步骤&#34;&gt;基本步骤&lt;/h2&gt;
+&lt;h3 id=&#34;编写dockerfile&#34;&gt;编写dockerfile&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这里非必须在应用根目录下进行dockerfile的建立及编写，但是为了后续方便，强烈建议&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;在应用根目录新建Dockerfile文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;touch Dockerfile
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;内容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;# 基础镜像，这里选用python3.8
+FROM python:3.8
+
+# 维护者（非必需）
+MAINTAINER &amp;lt;your_name&amp;gt; &amp;lt;your_email&amp;gt;
+
+# 指定工作目录
+WORKDIR /
+# 将应用所需文件拷贝到容器中
+COPY . /
+
+# 安装必要的python三方库，建议提前生成一个依赖库列表，为了后续的构建方便
+# 这里推荐使用pipreqs三方库生成，这样能够最小化使用到的库数量
+RUN pip install -r requirements.txt -i https://pypi.doubanio.com/simple
+
+# 暴露容器端口
+EXPOSE &amp;lt;port_used&amp;gt;/tcp
+
+# 执行docker run会执行的命令，按照空格进行分割
+CMD [&amp;#34;python&amp;#34;, &amp;#34;/run.py&amp;#34;]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;构建docker镜像&#34;&gt;构建docker镜像&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker build -t &amp;lt;image_name&amp;gt; &amp;lt;Dockerfile_path&amp;gt;
+// 这里需要强调的是 &amp;lt;Dockerfile_path&amp;gt; 一定需要是一个目录，而不是dockerfile本身
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;其他&#34;&gt;其他&lt;/h2&gt;
+&lt;h3 id=&#34;将镜像打包为tar文件方便迁移&#34;&gt;将镜像打包为tar文件，方便迁移&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker save -o &amp;lt;file_name.tar&amp;gt; &amp;lt;image_name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;将迁移的tar文件导入为镜像&#34;&gt;将迁移的tar文件导入为镜像&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker load --input &amp;lt;file_name.tar&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;</content>
+    </item>
+    
+  </channel>
+</rss>

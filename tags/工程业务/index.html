@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>工程业务 :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/tags/%E5%B7%A5%E7%A8%8B%E4%B8%9A%E5%8A%A1/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="工程业务">
+<meta property="og:description" content="" />
+<meta property="og:url" content="/tags/%E5%B7%A5%E7%A8%8B%E4%B8%9A%E5%8A%A1/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/%E5%B7%A5%E7%A8%8B%E4%B8%9A%E5%8A%A1/index.xml" rel="alternate" type="application/rss+xml" title="Chaos" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/2/">关于python协程销毁、超时</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/python/">Python</a>&nbsp;
+            
+            #<a href="/tags/%E5%B7%A5%E7%A8%8B%E4%B8%9A%E5%8A%A1/">工程业务</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            概念 协程 通过async/await语法进行声明，是书写python异步应用的推荐方式 可等待对象 如果一个对象可以在await中使用，那么它就是可等待/awaitable对象 类型：协程、任务、Future async.sleep(delay, result=None, *, loop=None) 阻塞delay指定的秒数 sleep()总是为挂起当前任务，以允许其他任务运行 场景 Sanic后台任务执行失败被挂起，不报错，影响后续任务的进行 解决方案 对后台任务中可能出现失败的协程增设超时 asyncio.wait_for(aw,, timeout, *, loop=None) 等待aw可等待对象完成，指定timeout秒数后超时取消 timeout可以为None，也可以为float/int数值表示的等待秒数。如果timeout为None，则等待直到协程返回 如果发生超时，任务将取消并引发asyncio.TimeoutError 要避免任务取消，可以加上shield() 简单等待 asyncio.wait(aws, *, loop=None, return_when=ALL_CONPLETED) 并发地运行aws可迭代对象中的可等待对象并进入阻塞状态直到满足return_when所执行的条件 aws可迭代对象必须不为空 此函数不会引发asyncio.TimeoutError，当超时发生时，未完成的Future/Task将在指定秒数后返回；与wait_for()不同，wait()在超时后不会取消可等待对象 
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/2/">Read more →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

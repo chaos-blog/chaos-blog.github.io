@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>不同发行版安装NVIDIA-container-runtime :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="背景 NVIDIA-container-runtime是在docker容器中映射本机显卡必备的运行时 NVIDIA推出该工具之后搭配新版本的docker就不需要使用单独版本的docker启动支持显卡的容器 开始动手 添加安装源 官网比较难进，酌情查看
+Debian-based distributions Debian/Ubuntu/&amp;hellip;
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \ sudo apt-key add - distribution=$(. /etc/os-release;echo $ID$VERSION_ID) curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \ sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list sudo apt-get update RHEL-based distributions CentOS/Fedora/Oracle/&amp;hellip;
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID) curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.repo | \ sudo tee /etc/yum.repos.d/nvidia-container-runtime.repo 更新密钥 安装源来自于nvidia官网，可能会有些慢
+Debian-based distributions curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \ sudo apt-key add - RHEL-based distributions DIST=$(sed -n &amp;#39;s/releasever=//p&amp;#39; /etc/yum.conf) DIST=${DIST:-$(. /etc/os-release; echo $VERSION_ID)} sudo rpm -e gpg-pubkey-f796ecb0 sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/$DIST/nvidia-container-runtime/gpgdir --delete-key f796ecb0 安装 安装源来自于nvidia官网，可能会有些慢" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/21/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="chaos" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="不同发行版安装NVIDIA-container-runtime">
+<meta property="og:description" content="背景 NVIDIA-container-runtime是在docker容器中映射本机显卡必备的运行时 NVIDIA推出该工具之后搭配新版本的docker就不需要使用单独版本的docker启动支持显卡的容器 开始动手 添加安装源 官网比较难进，酌情查看
+Debian-based distributions Debian/Ubuntu/&amp;hellip;
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \ sudo apt-key add - distribution=$(. /etc/os-release;echo $ID$VERSION_ID) curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \ sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list sudo apt-get update RHEL-based distributions CentOS/Fedora/Oracle/&amp;hellip;
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID) curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.repo | \ sudo tee /etc/yum.repos.d/nvidia-container-runtime.repo 更新密钥 安装源来自于nvidia官网，可能会有些慢
+Debian-based distributions curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \ sudo apt-key add - RHEL-based distributions DIST=$(sed -n &amp;#39;s/releasever=//p&amp;#39; /etc/yum.conf) DIST=${DIST:-$(. /etc/os-release; echo $VERSION_ID)} sudo rpm -e gpg-pubkey-f796ecb0 sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/$DIST/nvidia-container-runtime/gpgdir --delete-key f796ecb0 安装 安装源来自于nvidia官网，可能会有些慢" />
+<meta property="og:url" content="/posts/21/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/21/">不同发行版安装NVIDIA-container-runtime</a>
+  </h1>
+  <div class="post-meta">
+    
+    
+      <span class="post-author">chaos</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (107 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+      
+      #<a href="/tags/system/">System</a>&nbsp;
+      
+      #<a href="/tags/linux/">Linux</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+    <div class="table-of-contents">
+      <h2>
+        目录
+      </h2>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#开始动手">开始动手</a>
+      <ul>
+        <li><a href="#添加安装源">添加安装源</a></li>
+        <li><a href="#更新密钥">更新密钥</a></li>
+        <li><a href="#安装">安装</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+    </div>
+  
+
+  <div class="post-content"><div>
+        <h2 id="背景">背景<a href="#背景" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li><strong>NVIDIA-container-runtime</strong>是在docker容器中映射本机显卡必备的运行时</li>
+<li>NVIDIA推出该工具之后搭配新版本的docker就不需要使用单独版本的docker启动支持显卡的容器</li>
+</ul>
+<h2 id="开始动手">开始动手<a href="#开始动手" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="添加安装源">添加安装源<a href="#添加安装源" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<blockquote>
+<p><a href="https://nvidia.github.io/nvidia-container-runtime/">官网</a>比较难进，酌情查看</p>
+</blockquote>
+<h4 id="debian-based-distributions">Debian-based distributions<a href="#debian-based-distributions" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<blockquote>
+<p>Debian/Ubuntu/&hellip;</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  sudo apt-key add -
+</span></span><span style="display:flex;"><span>distribution<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>. /etc/os-release;echo $ID$VERSION_ID<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
+</span></span><span style="display:flex;"><span>sudo apt-get update
+</span></span></code></pre></div><h4 id="rhel-based-distributions">RHEL-based distributions<a href="#rhel-based-distributions" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<blockquote>
+<p>CentOS/Fedora/Oracle/&hellip;</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>distribution<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>. /etc/os-release;echo $ID$VERSION_ID<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.repo | <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  sudo tee /etc/yum.repos.d/nvidia-container-runtime.repo
+</span></span></code></pre></div><h3 id="更新密钥">更新密钥<a href="#更新密钥" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<blockquote>
+<p>安装源来自于nvidia官网，可能会有些慢</p>
+</blockquote>
+<h4 id="debian-based-distributions-1">Debian-based distributions<a href="#debian-based-distributions-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  sudo apt-key add -
+</span></span></code></pre></div><h4 id="rhel-based-distributions-1">RHEL-based distributions<a href="#rhel-based-distributions-1" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>DIST<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>sed -n <span style="color:#e6db74">&#39;s/releasever=//p&#39;</span> /etc/yum.conf<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>DIST<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>DIST<span style="color:#66d9ef">:-$(</span>. /etc/os-release; echo $VERSION_ID<span style="color:#66d9ef">)</span><span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>sudo rpm -e gpg-pubkey-f796ecb0
+</span></span><span style="display:flex;"><span>sudo gpg --homedir /var/lib/yum/repos/<span style="color:#66d9ef">$(</span>uname -m<span style="color:#66d9ef">)</span>/$DIST/nvidia-container-runtime/gpgdir --delete-key f796ecb0
+</span></span></code></pre></div><h3 id="安装">安装<a href="#安装" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<blockquote>
+<p>安装源来自于nvidia官网，可能会有些慢</p>
+</blockquote>
+<h4 id="debian-based-distributions-2">Debian-based distributions<a href="#debian-based-distributions-2" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo apt-get install nvidia-container-runtime
+</span></span></code></pre></div><h4 id="rhel-based-distributions-2">RHEL-based distributions<a href="#rhel-based-distributions-2" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>sudo yum install nvidia-container-runtime
+</span></span></code></pre></div><h2 id="参考">参考<a href="#参考" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li><a href="https://github.com/NVIDIA/nvidia-container-runtime">NVIDIA container runtime repository</a></li>
+<li><a href="https://nvidia.github.io/nvidia-container-runtime/">NVIDIA container runtime distributions</a></li>
+</ul>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/8/">
+                <span class="button__icon">←</span>
+                <span class="button__text">不同Linux发行版添加新用户并设置权限</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/posts/10/">
+                <span class="button__text">使用Anyproxy搭配frp搭建校园网回校代理</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

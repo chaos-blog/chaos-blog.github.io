@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>使用wireguard&amp;amp;wg-easy快速实现异地组网 :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="背景 WireGuard：是一个现代化的基于Linux内核态运行的高效、优雅的跨平台VPN实现方案；底层协议采用UDP进行数据传输 wg-easy：是一个使用Vue&#43;wireguard开发的快速启动、管理、监控wg服务的docker镜像 需求： 异地组网：n台互相在异地的机器相互组成一个局域网并各自拥有自己在该虚拟内网中的独立ip地址，实现无障碍安全互访 无公网ip：这里不做标题党，具体的网络拓扑是： 1台具备公网ip的服务器 n-1台不具备公网ip并且藏在无数层NAT之后的机器 解决方案 总体思路 使用具备公网ip的服务器作为wg服务端，所有在vpn内的机器直接通过该设备进行流量转发 wg-easy启动在公网ip服务器，并统一通过面板为客户机下发配置文件 其他设备直接本机安装wg作为客户端 启动服务端（具备公网ip的机器） 这里采用docker-compose的方式进行启动，由于wg-easy具备一个漂亮的管理面板，故使用traefik对其进行管理
+建立启动配置文件 version: &amp;#34;3.8&amp;#34; services: wg-easy: environment: # ⚠️ Required: # Change this to your host&amp;#39;s public address - WG_HOST=&amp;lt;ur host domain&amp;gt; # - WG_DEFAULT_DNS=192.168.2.1 - WG_ALLOWED_IPS=&amp;lt;set default ACL in the clients&amp;gt; # Optional: - PASSWORD=&amp;lt;web ui&amp;#39;s password&amp;gt; # - WG_PORT=51820 - WG_DEFAULT_ADDRESS=10.8.0.x # - WG_MTU=1420 image: weejewel/wg-easy container_name: wg_easy volumes: - &amp;lt;path_to_host&amp;gt;:/etc/wireguard # ports: # - &amp;#34;51820:51820/udp&amp;#34; # control port(main) # - &amp;#34;51821:51821/tcp&amp;#34; # web ui port network_mode: &amp;#34;host&amp;#34; # ⚠️Required restart: unless-stopped cap_add: - NET_ADMIN - SYS_MODULE labels: - traefik." />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/17/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="chaos" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="使用wireguard&amp;amp;wg-easy快速实现异地组网">
+<meta property="og:description" content="背景 WireGuard：是一个现代化的基于Linux内核态运行的高效、优雅的跨平台VPN实现方案；底层协议采用UDP进行数据传输 wg-easy：是一个使用Vue&#43;wireguard开发的快速启动、管理、监控wg服务的docker镜像 需求： 异地组网：n台互相在异地的机器相互组成一个局域网并各自拥有自己在该虚拟内网中的独立ip地址，实现无障碍安全互访 无公网ip：这里不做标题党，具体的网络拓扑是： 1台具备公网ip的服务器 n-1台不具备公网ip并且藏在无数层NAT之后的机器 解决方案 总体思路 使用具备公网ip的服务器作为wg服务端，所有在vpn内的机器直接通过该设备进行流量转发 wg-easy启动在公网ip服务器，并统一通过面板为客户机下发配置文件 其他设备直接本机安装wg作为客户端 启动服务端（具备公网ip的机器） 这里采用docker-compose的方式进行启动，由于wg-easy具备一个漂亮的管理面板，故使用traefik对其进行管理
+建立启动配置文件 version: &amp;#34;3.8&amp;#34; services: wg-easy: environment: # ⚠️ Required: # Change this to your host&amp;#39;s public address - WG_HOST=&amp;lt;ur host domain&amp;gt; # - WG_DEFAULT_DNS=192.168.2.1 - WG_ALLOWED_IPS=&amp;lt;set default ACL in the clients&amp;gt; # Optional: - PASSWORD=&amp;lt;web ui&amp;#39;s password&amp;gt; # - WG_PORT=51820 - WG_DEFAULT_ADDRESS=10.8.0.x # - WG_MTU=1420 image: weejewel/wg-easy container_name: wg_easy volumes: - &amp;lt;path_to_host&amp;gt;:/etc/wireguard # ports: # - &amp;#34;51820:51820/udp&amp;#34; # control port(main) # - &amp;#34;51821:51821/tcp&amp;#34; # web ui port network_mode: &amp;#34;host&amp;#34; # ⚠️Required restart: unless-stopped cap_add: - NET_ADMIN - SYS_MODULE labels: - traefik." />
+<meta property="og:url" content="/posts/17/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/17/">使用wireguard&amp;wg-easy快速实现异地组网</a>
+  </h1>
+  <div class="post-meta">
+    
+    
+      <span class="post-author">chaos</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (144 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/system/">System</a>&nbsp;
+      
+      #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+    <div class="table-of-contents">
+      <h2>
+        目录
+      </h2>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#解决方案">解决方案</a>
+      <ul>
+        <li><a href="#总体思路">总体思路</a></li>
+        <li><a href="#启动服务端具备公网ip的机器">启动服务端（具备公网ip的机器）</a></li>
+        <li><a href="#建立子网客户机下发客户端配置文件">建立子网客户机，下发客户端配置文件</a></li>
+        <li><a href="#客户端安装wireguard不具备公网ip的机器">客户端安装wireguard（不具备公网ip的机器）</a></li>
+      </ul>
+    </li>
+    <li><a href="#踩坑指南">踩坑指南</a></li>
+  </ul>
+</nav>
+    </div>
+  
+
+  <div class="post-content"><div>
+        <h2 id="背景">背景<a href="#背景" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>WireGuard：是一个现代化的基于Linux内核态运行的高效、优雅的跨平台VPN实现方案；底层协议采用UDP进行数据传输</li>
+<li>wg-easy：是一个使用Vue+wireguard开发的快速启动、管理、监控wg服务的docker镜像</li>
+<li>需求：
+<ul>
+<li>异地组网：n台互相在异地的机器相互组成一个局域网并各自拥有自己在该虚拟内网中的独立ip地址，实现无障碍安全互访</li>
+<li>无公网ip：这里不做标题党，具体的网络拓扑是：
+<ul>
+<li>1台具备公网ip的服务器</li>
+<li>n-1台不具备公网ip并且藏在无数层NAT之后的机器</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="解决方案">解决方案<a href="#解决方案" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="总体思路">总体思路<a href="#总体思路" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>使用具备公网ip的服务器作为wg服务端，所有在vpn内的机器直接通过该设备进行流量转发</li>
+<li>wg-easy启动在公网ip服务器，并统一通过面板为客户机下发配置文件</li>
+<li>其他设备直接本机安装wg作为客户端</li>
+</ul>
+<h3 id="启动服务端具备公网ip的机器">启动服务端（具备公网ip的机器）<a href="#启动服务端具备公网ip的机器" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<blockquote>
+<p>这里采用<code>docker-compose</code>的方式进行启动，由于wg-easy具备一个漂亮的管理面板，故使用<code>traefik</code>对其进行管理</p>
+</blockquote>
+<ul>
+<li>建立启动配置文件</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">version</span>: <span style="color:#e6db74">&#34;3.8&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">wg-easy</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># ⚠️ Required:</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Change this to your host&#39;s public address</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">WG_HOST=&lt;ur host domain&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># - WG_DEFAULT_DNS=192.168.2.1</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">WG_ALLOWED_IPS=&lt;set default ACL in the clients&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Optional:</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">PASSWORD=&lt;web ui&#39;s password&gt;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># - WG_PORT=51820</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">WG_DEFAULT_ADDRESS=10.8.0.x</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># - WG_MTU=1420</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">weejewel/wg-easy</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">container_name</span>: <span style="color:#ae81ff">wg_easy</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">&lt;path_to_host&gt;:/etc/wireguard</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># ports:</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># - &#34;51820:51820/udp&#34; # control port(main)</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># - &#34;51821:51821/tcp&#34; # web ui port</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">network_mode</span>: <span style="color:#e6db74">&#34;host&#34;</span> <span style="color:#75715e"># ⚠️Required</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">restart</span>: <span style="color:#ae81ff">unless-stopped</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">cap_add</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">NET_ADMIN</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">SYS_MODULE</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">traefik.enable=true</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">traefik.http.routers.wg_easy.rule=Host(`&lt;url rule for traefik&gt;`)</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">traefik.http.routers.wg_easy.middlewares=redirect</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">traefik.http.routers.wg_easy.tls=true</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">traefik.http.routers.wg_easy.tls.certresolver=sample</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">traefik.http.middlewares.redirect.redirectscheme.scheme=https</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">traefik.http.middlewares.redirect.redirectscheme.permanent=true</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">traefik.http.services.wg_easy.loadbalancer.server.port=51821</span>
+</span></span></code></pre></div><ul>
+<li>
+<p>启动wg-easy：<code>docker-compose up -d</code></p>
+</li>
+<li>
+<p>查看log可以使用：<code>docker-compose logs -f wg_easy</code></p>
+</li>
+<li>
+<p><strong>Note：由于wg运行在linux内核态，故其强依赖于5.x.x的linux内核。强烈建议首先检查<code>uname -r</code>是否为<!-- raw HTML omitted -->5.x.x<!-- raw HTML omitted -->，否则需要进行一个<a href="https://blog.dov.moe/posts/32240/">内核升级</a></strong></p>
+</li>
+<li>
+<p>启动成功后访问<code>host:5000</code>，输入密码进入wg服务端后台管理</p>
+</li>
+</ul>
+<h3 id="建立子网客户机下发客户端配置文件">建立子网客户机，下发客户端配置文件<a href="#建立子网客户机下发客户端配置文件" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>进入后台后点击<!-- raw HTML omitted -->+NEW<!-- raw HTML omitted -->添加新客户机</li>
+<li>输入完成后点击下载，获取客户机的配置文件，留待备用</li>
+</ul>
+<h3 id="客户端安装wireguard不具备公网ip的机器">客户端安装wireguard（不具备公网ip的机器）<a href="#客户端安装wireguard不具备公网ip的机器" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>wg支持全平台，可以在<a href="https://blog.dov.moe/posts/32240/">官网</a>找到全平台的安装方式</li>
+</ul>
+<blockquote>
+<p>同样的，该处如果为linux，则强依赖与目标机内核版本</p>
+</blockquote>
+<ul>
+<li>windows直接添加配置文件之后启动即可，回到服务端后台可以看到两台设备已经建立连接并具备各自的独立ip，<strong>服务机ip默认为x.x.x.1</strong></li>
+<li>对于linux
+<ul>
+<li>需要将刚刚下载的配置文件放置在<code>/etc/wireguard</code>下，重命名为你想要使用的虚拟网卡名</li>
+<li>wg(linux)给出两种优雅的启动方式：
+<ul>
+<li>systemd（推荐，可以配置开机自启）：<code>systemctl start wg-quick@配置文件名</code></li>
+<li>wg-quick：<code>wg-quick up 配置文件名</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>回到服务端后台，可以看到两台设备已经建立连接并具备各自的独立ip，<strong>服务机ip默认为x.x.x.1</strong></li>
+</ul>
+<h2 id="踩坑指南">踩坑指南<a href="#踩坑指南" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>目前发现的一个问题，如果在服务机上开启了ufw，即便是放通了wg的主配置端口也会存在子网设备无法互访的问题，暂未排查出问题，解决方案即是关闭ufw；初步推断是wg在进行内网打洞/转发的时候使用了不同的端口（此时服务端相当于一个网关设备），但是被ufw全数阻挡了</li>
+<li>有调研发现大陆境内的udp被运营商限速</li>
+<li>当服务机是墙外机器（即流量需要过墙）时，有几率会被识别，因为不同于frp等内网穿透工具，wg具有明显且易用的xx上网特征</li>
+</ul>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/4/">
+                <span class="button__icon">←</span>
+                <span class="button__text">使用Docker将python应用打包为images</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/posts/15/">
+                <span class="button__text">使用zerotier-one搭配anyproxy保障多种方式回内网</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

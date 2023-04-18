@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>model.zero_grad() VS. optimzer.zero_grad() :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="引言 在模型训练时，每个Batch反向传播完成后我们需要手动清除计算图上本次迭代的所有梯度 在阅读不同的代码时，总能看到不同的清空代码： model.zero_grad() optimizer.zero_grad() 正文 上述两种梯度清空的方式均有效，区别在于起作用的范围不同 model.zero_grad() 此时mdoel包含的所有参数上的梯度均被清空 optimizer.zero_grad() 此时该优化器中负责更新的模型参数上的梯度被清空，即不一定是全部的梯度被清空 若模型训练过程中只有一个优化器，即优化器构造时使用 optimizer = optim.Optimiers(model.parameters(), lr=args.lr) 此时上述两种梯度清空方式完全等价 总结 两种不同的梯度清零方式在多数场景下基本等价，其区别在于作用范围不同 对于多任务训练、多优化器的训练中，需要根据具体训练策略的不同对参数梯度进行不同作用范围的清空 " />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/12/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="chaos" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="model.zero_grad() VS. optimzer.zero_grad()">
+<meta property="og:description" content="引言 在模型训练时，每个Batch反向传播完成后我们需要手动清除计算图上本次迭代的所有梯度 在阅读不同的代码时，总能看到不同的清空代码： model.zero_grad() optimizer.zero_grad() 正文 上述两种梯度清空的方式均有效，区别在于起作用的范围不同 model.zero_grad() 此时mdoel包含的所有参数上的梯度均被清空 optimizer.zero_grad() 此时该优化器中负责更新的模型参数上的梯度被清空，即不一定是全部的梯度被清空 若模型训练过程中只有一个优化器，即优化器构造时使用 optimizer = optim.Optimiers(model.parameters(), lr=args.lr) 此时上述两种梯度清空方式完全等价 总结 两种不同的梯度清零方式在多数场景下基本等价，其区别在于作用范围不同 对于多任务训练、多优化器的训练中，需要根据具体训练策略的不同对参数梯度进行不同作用范围的清空 " />
+<meta property="og:url" content="/posts/12/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/12/">model.zero_grad() VS. optimzer.zero_grad()</a>
+  </h1>
+  <div class="post-meta">
+    
+    
+      <span class="post-author">chaos</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (20 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/python/">Python</a>&nbsp;
+      
+      #<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+    <div class="table-of-contents">
+      <h2>
+        目录
+      </h2>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#引言">引言</a></li>
+    <li><a href="#正文">正文</a></li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+    </div>
+  
+
+  <div class="post-content"><div>
+        <h2 id="引言">引言<a href="#引言" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>在模型训练时，每个Batch反向传播完成后我们需要手动清除计算图上本次迭代的所有梯度</li>
+<li>在阅读不同的代码时，总能看到不同的清空代码：
+<ul>
+<li><code>model.zero_grad()</code></li>
+<li><code>optimizer.zero_grad()</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="正文">正文<a href="#正文" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>上述两种梯度清空的方式均有效，区别在于起作用的范围不同</li>
+<li><code>model.zero_grad()</code>
+<ul>
+<li>此时<code>mdoel</code>包含的所有参数上的梯度均被清空</li>
+</ul>
+</li>
+<li><code>optimizer.zero_grad()</code>
+<ul>
+<li>此时该优化器中负责更新的模型参数上的梯度被清空，即不一定是全部的梯度被清空</li>
+<li>若模型训练过程中只有一个优化器，即优化器构造时使用</li>
+</ul>
+<pre tabindex="0"><code>   optimizer = optim.Optimiers(model.parameters(), lr=args.lr)
+</code></pre>此时上述两种梯度清空方式完全等价</li>
+</ul>
+<h2 id="总结">总结<a href="#总结" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>两种不同的梯度清零方式在多数场景下基本等价，其区别在于作用范围不同</li>
+<li>对于多任务训练、多优化器的训练中，需要根据具体训练策略的不同对参数梯度进行不同作用范围的清空</li>
+</ul>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/22/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Linux下xargs的基本用法</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/posts/6/">
+                <span class="button__text">python中的print()函数深度使用</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

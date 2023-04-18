@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>运维 on Chaos</title>
+    <link>/tags/%E8%BF%90%E7%BB%B4/</link>
+    <description>Recent content in 运维 on Chaos</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="/tags/%E8%BF%90%E7%BB%B4/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux下xargs的基本用法</title>
+      <link>/posts/22/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/22/</guid>
+      <description>背景需求 遇到一个需要使用scp/rsync向远端传送当前文件夹下前n个文件的需求，若要一个一个的手输也不是不行，但总感觉有一些蠢
+解决方案 xargs功能强大 xargs（英文全拼： eXtended ARGuments）是给命令传递参数的一个过滤器，也是组合多个命令的一个工具。 xargs 可以将管道或标准输入（stdin）数据转换成命令行参数，也能够从文件的输出中读取数据。 xargs 也可以将单行或多行文本输入转换为其他格式，例如多行变单行，单行变多行。 xargs 是一个强有力的命令，它能够捕获一个命令的输出，然后传递给另外一个命令。 详解 首先是要拿到该文件夹下的前n个文件 ls | head -100
+利用rsync向远端传输文件 rsync -avzP &amp;lt;file_names&amp;gt; user@remote
+使用xargs省去手动输入文件列表 ls | head -100 |xargs -i rsync -avzP {} user@remote
+注意事项 args 默认的命令是 echo，这意味着通过管道传递给 xargs 的输入将会包含换行和空白，不过通过 xargs 的处理，换行和空白将被空格取代。 xargs 一般是和管道一起使用。 </description>
+      <content>&lt;h2 id=&#34;背景需求&#34;&gt;背景需求&lt;/h2&gt;
+&lt;p&gt;遇到一个需要使用scp/rsync向远端传送当前文件夹下前n个文件的需求，若要一个一个的手输也不是不行，但总感觉有一些蠢&lt;/p&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;xargs功能强大&lt;/li&gt;
+&lt;li&gt;xargs（英文全拼： eXtended ARGuments）是给命令传递参数的一个过滤器，也是组合多个命令的一个工具。&lt;/li&gt;
+&lt;li&gt;xargs 可以将管道或标准输入（stdin）数据转换成命令行参数，也能够从文件的输出中读取数据。&lt;/li&gt;
+&lt;li&gt;xargs 也可以将单行或多行文本输入转换为其他格式，例如多行变单行，单行变多行。&lt;/li&gt;
+&lt;li&gt;xargs 是一个强有力的命令，它能够捕获一个命令的输出，然后传递给另外一个命令。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;详解&#34;&gt;详解&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;首先是要拿到该文件夹下的前n个文件
+&lt;code&gt;ls | head -100&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;利用rsync向远端传输文件
+&lt;code&gt;rsync -avzP &amp;lt;file_names&amp;gt; user@remote&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使用xargs省去手动输入文件列表
+&lt;code&gt;ls | head -100 |xargs -i rsync -avzP {} user@remote&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;注意事项&#34;&gt;注意事项&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;args 默认的命令是 echo，这意味着通过管道传递给 xargs 的输入将会包含换行和空白，不过通过 xargs 的处理，换行和空白将被空格取代。&lt;/li&gt;
+&lt;li&gt;xargs 一般是和管道一起使用。&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

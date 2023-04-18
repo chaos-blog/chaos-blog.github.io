@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>使用Anyproxy搭配frp搭建校园网回校代理 :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="搭建回校代理，方便在外访问学校服务器 需求 由于学校vpn仅限教职工与博士使用，同时校园网仅限一台pc设备同时在线，所以有时需要笔记本连接热点的情况下连接实验室内部的服务器就显得非常蠢笨以及困难。 目前已经搭建了校园网内台式机的rdp外网连接，但是在不稳定的网络状况下，rdp有时候心有余而力不足，同时更多的需求只是需要进行内网的ssh连接，使用rdp未免有些大材小用 实现工具 Anyproxy 阿里开源的一款开箱即用的代理服务 带有web监控页面 支持http/https代理 依赖于nodejs，方便安装 支持生成CA证书认证 Frp go语言的一款开箱即用内网穿透 支持插件，方便后期进行拓展 支持单服务端多客户端 全平台对称，方便跨平台使用 实现方案 安装Nodejs 官网下载nodejs的安装包 按照你默认设置进行安装 Note: 中途会提示是否安装choco，在本次教程中可以将勾选取消，目前我们用不到
+使用npm安装anyproxy 启动cmd/powershell任意命令行窗口 npm install anyproxy -g 命令行窗口直接执行anyproxy --port &amp;lt;port_u_want_to_use_as_proxy&amp;gt; ==Note:==上述测试可能会出现command not found的问题，需要手动将命令行定位到&amp;lt;node_install_path&amp;gt;/node_global/node_mudoles/下
+在网内机器上安装配置frpc 在Release页面下载合适的系统版本并解压 使用记事本编辑frpc.ini，替换为下列内容 [common] server_addr = &amp;lt;ur_frps_address&amp;gt; server_port = &amp;lt;ur_frps_port&amp;gt; [anyproxy-interface] local_ip = 127.0.0.1 local_port = 8002 remote_port = 8002 [anyproxy-http] local_ip = 127.0.0.1 local_port = &amp;lt;port_u_want_to_use_as_proxy&amp;gt; remote_port = &amp;lt;port_u_want_to_use_as_proxy&amp;gt; 启动测试frpc.exe -c frpc.ini 在具备公网ip的机器上安装frps 下载同上 使用合适的文本编辑工具编辑frps.ini，替换为下列内容 [common] bind_port = &amp;lt;ur_frps_port&amp;gt; 启动测试frps -c frps." />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/10/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="chaos" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="使用Anyproxy搭配frp搭建校园网回校代理">
+<meta property="og:description" content="搭建回校代理，方便在外访问学校服务器 需求 由于学校vpn仅限教职工与博士使用，同时校园网仅限一台pc设备同时在线，所以有时需要笔记本连接热点的情况下连接实验室内部的服务器就显得非常蠢笨以及困难。 目前已经搭建了校园网内台式机的rdp外网连接，但是在不稳定的网络状况下，rdp有时候心有余而力不足，同时更多的需求只是需要进行内网的ssh连接，使用rdp未免有些大材小用 实现工具 Anyproxy 阿里开源的一款开箱即用的代理服务 带有web监控页面 支持http/https代理 依赖于nodejs，方便安装 支持生成CA证书认证 Frp go语言的一款开箱即用内网穿透 支持插件，方便后期进行拓展 支持单服务端多客户端 全平台对称，方便跨平台使用 实现方案 安装Nodejs 官网下载nodejs的安装包 按照你默认设置进行安装 Note: 中途会提示是否安装choco，在本次教程中可以将勾选取消，目前我们用不到
+使用npm安装anyproxy 启动cmd/powershell任意命令行窗口 npm install anyproxy -g 命令行窗口直接执行anyproxy --port &amp;lt;port_u_want_to_use_as_proxy&amp;gt; ==Note:==上述测试可能会出现command not found的问题，需要手动将命令行定位到&amp;lt;node_install_path&amp;gt;/node_global/node_mudoles/下
+在网内机器上安装配置frpc 在Release页面下载合适的系统版本并解压 使用记事本编辑frpc.ini，替换为下列内容 [common] server_addr = &amp;lt;ur_frps_address&amp;gt; server_port = &amp;lt;ur_frps_port&amp;gt; [anyproxy-interface] local_ip = 127.0.0.1 local_port = 8002 remote_port = 8002 [anyproxy-http] local_ip = 127.0.0.1 local_port = &amp;lt;port_u_want_to_use_as_proxy&amp;gt; remote_port = &amp;lt;port_u_want_to_use_as_proxy&amp;gt; 启动测试frpc.exe -c frpc.ini 在具备公网ip的机器上安装frps 下载同上 使用合适的文本编辑工具编辑frps.ini，替换为下列内容 [common] bind_port = &amp;lt;ur_frps_port&amp;gt; 启动测试frps -c frps." />
+<meta property="og:url" content="/posts/10/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/10/">使用Anyproxy搭配frp搭建校园网回校代理</a>
+  </h1>
+  <div class="post-meta">
+    
+    
+      <span class="post-author">chaos</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (113 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/system/">System</a>&nbsp;
+      
+      #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+    <div class="table-of-contents">
+      <h2>
+        目录
+      </h2>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#需求">需求</a></li>
+    <li><a href="#实现工具">实现工具</a>
+      <ul>
+        <li><a href="#anyproxy">Anyproxy</a></li>
+        <li><a href="#frp">Frp</a></li>
+      </ul>
+    </li>
+    <li><a href="#实现方案">实现方案</a>
+      <ul>
+        <li><a href="#安装nodejs">安装Nodejs</a></li>
+        <li><a href="#使用npm安装anyproxy">使用npm安装anyproxy</a></li>
+        <li><a href="#在网内机器上安装配置frpc">在网内机器上安装配置frpc</a></li>
+        <li><a href="#在具备公网ip的机器上安装frps">在具备公网ip的机器上安装frps</a></li>
+      </ul>
+    </li>
+    <li><a href="#使用">使用</a>
+      <ul>
+        <li><a href="#全局系统代理">全局系统代理</a></li>
+        <li><a href="#ssh内网地址">ssh内网地址</a></li>
+        <li><a href="#浏览器代理">浏览器代理</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  
+
+  <div class="post-content"><div>
+        <h1 id="搭建回校代理方便在外访问学校服务器">搭建回校代理，方便在外访问学校服务器<a href="#搭建回校代理方便在外访问学校服务器" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="需求">需求<a href="#需求" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>由于学校vpn仅限教职工与博士使用，同时校园网仅限一台pc设备同时在线，所以有时需要笔记本连接热点的情况下连接实验室内部的服务器就显得非常蠢笨以及困难。</li>
+<li>目前已经搭建了校园网内台式机的rdp外网连接，但是在不稳定的网络状况下，rdp有时候心有余而力不足，同时更多的需求只是需要进行内网的ssh连接，使用rdp未免有些大材小用</li>
+</ul>
+<h2 id="实现工具">实现工具<a href="#实现工具" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="anyproxy">Anyproxy<a href="#anyproxy" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>阿里开源的一款开箱即用的代理服务</li>
+<li>带有web监控页面</li>
+<li>支持http/https代理</li>
+<li>依赖于nodejs，方便安装</li>
+<li>支持生成CA证书认证</li>
+</ul>
+<h3 id="frp">Frp<a href="#frp" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>go语言的一款开箱即用内网穿透</li>
+<li>支持插件，方便后期进行拓展</li>
+<li>支持单服务端多客户端</li>
+<li>全平台对称，方便跨平台使用</li>
+</ul>
+<h2 id="实现方案">实现方案<a href="#实现方案" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="安装nodejs">安装Nodejs<a href="#安装nodejs" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li><a href="https://nodejs.org/zh-cn/download/">官网</a>下载nodejs的安装包</li>
+<li>按照你默认设置进行安装</li>
+</ul>
+<blockquote>
+<p>Note: 中途会提示是否安装choco，在本次教程中可以将勾选取消，目前我们用不到</p>
+</blockquote>
+<h3 id="使用npm安装anyproxy">使用npm安装anyproxy<a href="#使用npm安装anyproxy" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>启动cmd/powershell任意命令行窗口</li>
+<li><code>npm install anyproxy -g</code></li>
+<li>命令行窗口直接执行<code>anyproxy --port &lt;port_u_want_to_use_as_proxy&gt;</code></li>
+</ul>
+<blockquote>
+<p>==Note:==上述测试可能会出现<code>command not found</code>的问题，需要手动将命令行定位到<code>&lt;node_install_path&gt;/node_global/node_mudoles/</code>下</p>
+</blockquote>
+<h3 id="在网内机器上安装配置frpc">在网内机器上安装配置frpc<a href="#在网内机器上安装配置frpc" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>在<a href="https://github.com/fatedier/frp/releases">Release</a>页面下载合适的系统版本并解压</li>
+<li>使用记事本编辑<code>frpc.ini</code>，替换为下列内容</li>
+</ul>
+<pre tabindex="0"><code>[common]
+server_addr = &lt;ur_frps_address&gt;
+server_port = &lt;ur_frps_port&gt;
+
+[anyproxy-interface]
+local_ip = 127.0.0.1
+local_port = 8002
+remote_port = 8002
+
+[anyproxy-http]
+local_ip = 127.0.0.1
+local_port = &lt;port_u_want_to_use_as_proxy&gt;
+remote_port = &lt;port_u_want_to_use_as_proxy&gt;
+</code></pre><ul>
+<li>启动测试<code>frpc.exe -c frpc.ini</code></li>
+</ul>
+<h3 id="在具备公网ip的机器上安装frps">在具备公网ip的机器上安装frps<a href="#在具备公网ip的机器上安装frps" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>下载同上</li>
+<li>使用合适的文本编辑工具编辑<code>frps.ini</code>，替换为下列内容</li>
+</ul>
+<pre tabindex="0"><code>[common]
+bind_port = &lt;ur_frps_port&gt;
+</code></pre><ul>
+<li>启动测试<code>frps -c frps.ini</code>/</li>
+</ul>
+<blockquote>
+<p>Note: 这里如果客户机与服务器配置没错的话，应该已经能够看到log输出两台机器已经互联</p>
+</blockquote>
+<h2 id="使用">使用<a href="#使用" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="全局系统代理">全局系统代理<a href="#全局系统代理" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>设置 -&gt; 网络 &amp; Internet -&gt; 代理 -&gt; 手动设置代理 -&gt; 填写frps地址与端口</li>
+<li>此时走系统代理的服务应该已经可以访问网内地址</li>
+</ul>
+<h3 id="ssh内网地址">ssh内网地址<a href="#ssh内网地址" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>无论什么平台，其默认命令行窗口是不走系统代理而是走更底层协议的</li>
+<li>ssh命令提供了新的代理接口</li>
+<li><a href="https://drive.google.com/file/d/1OMPGmG8cj5mmvjsO_AX0orPcI-h944D5/view?usp=sharing">下载</a>工具</li>
+<li>将其放在系统任何路径下，将路径添加到Path环境变量里</li>
+<li>再次执行ssh连接时添加参数<code>ssh -p &lt;port&gt; &lt;user&gt;@&lt;addr&gt; -o &quot;ProxyCommand connect -H &lt;frps_address&gt;:&lt;port_u_want_to_use_as_proxy&gt; %p %h&quot;</code></li>
+</ul>
+<h3 id="浏览器代理">浏览器代理<a href="#浏览器代理" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>推荐使用SwitchyOmega</li>
+<li>在配置中新建代理，设置对应代理地址、端口</li>
+<li>在访问校内网页时走代理即可</li>
+</ul>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/21/">
+                <span class="button__icon">←</span>
+                <span class="button__text">不同发行版安装NVIDIA-container-runtime</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/posts/4/">
+                <span class="button__text">使用Docker将python应用打包为images</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

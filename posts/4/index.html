@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>使用Docker将python应用打包为images :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="需求描述 正常运行的sanic应用需要进行服务器迁移，首先想到的当然是通过docker 基本步骤 编写dockerfile 这里非必须在应用根目录下进行dockerfile的建立及编写，但是为了后续方便，强烈建议
+在应用根目录新建Dockerfile文件 touch Dockerfile 内容 # 基础镜像，这里选用python3.8 FROM python:3.8 # 维护者（非必需） MAINTAINER &amp;lt;your_name&amp;gt; &amp;lt;your_email&amp;gt; # 指定工作目录 WORKDIR / # 将应用所需文件拷贝到容器中 COPY . / # 安装必要的python三方库，建议提前生成一个依赖库列表，为了后续的构建方便 # 这里推荐使用pipreqs三方库生成，这样能够最小化使用到的库数量 RUN pip install -r requirements.txt -i https://pypi.doubanio.com/simple # 暴露容器端口 EXPOSE &amp;lt;port_used&amp;gt;/tcp # 执行docker run会执行的命令，按照空格进行分割 CMD [&amp;#34;python&amp;#34;, &amp;#34;/run.py&amp;#34;] 构建docker镜像 docker build -t &amp;lt;image_name&amp;gt; &amp;lt;Dockerfile_path&amp;gt; // 这里需要强调的是 &amp;lt;Dockerfile_path&amp;gt; 一定需要是一个目录，而不是dockerfile本身 其他 将镜像打包为tar文件，方便迁移 docker save -o &amp;lt;file_name.tar&amp;gt; &amp;lt;image_name&amp;gt; 将迁移的tar文件导入为镜像 docker load --input &amp;lt;file_name.tar&amp;gt; " />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/4/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="chaos" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="使用Docker将python应用打包为images">
+<meta property="og:description" content="需求描述 正常运行的sanic应用需要进行服务器迁移，首先想到的当然是通过docker 基本步骤 编写dockerfile 这里非必须在应用根目录下进行dockerfile的建立及编写，但是为了后续方便，强烈建议
+在应用根目录新建Dockerfile文件 touch Dockerfile 内容 # 基础镜像，这里选用python3.8 FROM python:3.8 # 维护者（非必需） MAINTAINER &amp;lt;your_name&amp;gt; &amp;lt;your_email&amp;gt; # 指定工作目录 WORKDIR / # 将应用所需文件拷贝到容器中 COPY . / # 安装必要的python三方库，建议提前生成一个依赖库列表，为了后续的构建方便 # 这里推荐使用pipreqs三方库生成，这样能够最小化使用到的库数量 RUN pip install -r requirements.txt -i https://pypi.doubanio.com/simple # 暴露容器端口 EXPOSE &amp;lt;port_used&amp;gt;/tcp # 执行docker run会执行的命令，按照空格进行分割 CMD [&amp;#34;python&amp;#34;, &amp;#34;/run.py&amp;#34;] 构建docker镜像 docker build -t &amp;lt;image_name&amp;gt; &amp;lt;Dockerfile_path&amp;gt; // 这里需要强调的是 &amp;lt;Dockerfile_path&amp;gt; 一定需要是一个目录，而不是dockerfile本身 其他 将镜像打包为tar文件，方便迁移 docker save -o &amp;lt;file_name.tar&amp;gt; &amp;lt;image_name&amp;gt; 将迁移的tar文件导入为镜像 docker load --input &amp;lt;file_name.tar&amp;gt; " />
+<meta property="og:url" content="/posts/4/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/4/">使用Docker将python应用打包为images</a>
+  </h1>
+  <div class="post-meta">
+    
+    
+      <span class="post-author">chaos</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (70 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/%E5%88%86%E4%BA%AB/">分享</a>&nbsp;
+      
+      #<a href="/tags/docker/">Docker</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+    <div class="table-of-contents">
+      <h2>
+        目录
+      </h2>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#需求描述">需求描述</a></li>
+    <li><a href="#基本步骤">基本步骤</a>
+      <ul>
+        <li><a href="#编写dockerfile">编写dockerfile</a></li>
+        <li><a href="#构建docker镜像">构建docker镜像</a></li>
+      </ul>
+    </li>
+    <li><a href="#其他">其他</a>
+      <ul>
+        <li><a href="#将镜像打包为tar文件方便迁移">将镜像打包为tar文件，方便迁移</a></li>
+        <li><a href="#将迁移的tar文件导入为镜像">将迁移的tar文件导入为镜像</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  
+
+  <div class="post-content"><div>
+        <h2 id="需求描述">需求描述<a href="#需求描述" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>正常运行的sanic应用需要进行服务器迁移，首先想到的当然是通过docker</li>
+</ul>
+<h2 id="基本步骤">基本步骤<a href="#基本步骤" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="编写dockerfile">编写dockerfile<a href="#编写dockerfile" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<blockquote>
+<p>这里非必须在应用根目录下进行dockerfile的建立及编写，但是为了后续方便，强烈建议</p>
+</blockquote>
+<ul>
+<li>在应用根目录新建Dockerfile文件</li>
+</ul>
+<pre tabindex="0"><code>touch Dockerfile
+</code></pre><ul>
+<li>内容</li>
+</ul>
+<pre tabindex="0"><code># 基础镜像，这里选用python3.8
+FROM python:3.8
+
+# 维护者（非必需）
+MAINTAINER &lt;your_name&gt; &lt;your_email&gt;
+
+# 指定工作目录
+WORKDIR /
+# 将应用所需文件拷贝到容器中
+COPY . /
+
+# 安装必要的python三方库，建议提前生成一个依赖库列表，为了后续的构建方便
+# 这里推荐使用pipreqs三方库生成，这样能够最小化使用到的库数量
+RUN pip install -r requirements.txt -i https://pypi.doubanio.com/simple
+
+# 暴露容器端口
+EXPOSE &lt;port_used&gt;/tcp
+
+# 执行docker run会执行的命令，按照空格进行分割
+CMD [&#34;python&#34;, &#34;/run.py&#34;]
+</code></pre><h3 id="构建docker镜像">构建docker镜像<a href="#构建docker镜像" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<pre tabindex="0"><code>docker build -t &lt;image_name&gt; &lt;Dockerfile_path&gt;
+// 这里需要强调的是 &lt;Dockerfile_path&gt; 一定需要是一个目录，而不是dockerfile本身
+</code></pre><h2 id="其他">其他<a href="#其他" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="将镜像打包为tar文件方便迁移">将镜像打包为tar文件，方便迁移<a href="#将镜像打包为tar文件方便迁移" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<pre tabindex="0"><code>docker save -o &lt;file_name.tar&gt; &lt;image_name&gt;
+</code></pre><h3 id="将迁移的tar文件导入为镜像">将迁移的tar文件导入为镜像<a href="#将迁移的tar文件导入为镜像" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<pre tabindex="0"><code>docker load --input &lt;file_name.tar&gt;
+</code></pre>
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/10/">
+                <span class="button__icon">←</span>
+                <span class="button__text">使用Anyproxy搭配frp搭建校园网回校代理</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/posts/17/">
+                <span class="button__text">使用wireguard&amp;amp;wg-easy快速实现异地组网</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

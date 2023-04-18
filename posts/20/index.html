@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Pytorch单机多卡(DP)训练之后的模型“货不对板” :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="背景 之前介绍过Pytoch的单机多卡训练，当时采用的是内置的nn.DataParallel()方法 经过单机多卡训练的模型保存checkpoint之后再次加载需要同样使用DP()对模型进行封装之后才能正常加载，否则会报错状态词典的键值对不上 原因 经过DP()封装之后的模型，其状态词典分别添加了module.的前缀，例如原参数为hr_branch.conv_hr.1.layers.0.weight，封装之后变成了module.hr_branch.conv_hr.1.layers.0.weight。 解决方案 在加载状态词典之前将该前缀进行替换，得到纯净的状态词典，则不再需要重新对模型进行DP()封装 ckp_state_dict = torch.load(args.ckp, map_location=torch.device(&amp;#34;cpu&amp;#34;))[&amp;#34;model&amp;#34;] ckp_state = {} for k, v in ckp_state_dict.items(): k = k.replace(&amp;#34;module.&amp;#34;, &amp;#34;&amp;#34;) ckp_state[k] = v 参考 文章 " />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/20/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="chaos" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Pytorch单机多卡(DP)训练之后的模型“货不对板”">
+<meta property="og:description" content="背景 之前介绍过Pytoch的单机多卡训练，当时采用的是内置的nn.DataParallel()方法 经过单机多卡训练的模型保存checkpoint之后再次加载需要同样使用DP()对模型进行封装之后才能正常加载，否则会报错状态词典的键值对不上 原因 经过DP()封装之后的模型，其状态词典分别添加了module.的前缀，例如原参数为hr_branch.conv_hr.1.layers.0.weight，封装之后变成了module.hr_branch.conv_hr.1.layers.0.weight。 解决方案 在加载状态词典之前将该前缀进行替换，得到纯净的状态词典，则不再需要重新对模型进行DP()封装 ckp_state_dict = torch.load(args.ckp, map_location=torch.device(&amp;#34;cpu&amp;#34;))[&amp;#34;model&amp;#34;] ckp_state = {} for k, v in ckp_state_dict.items(): k = k.replace(&amp;#34;module.&amp;#34;, &amp;#34;&amp;#34;) ckp_state[k] = v 参考 文章 " />
+<meta property="og:url" content="/posts/20/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/20/">Pytorch单机多卡(DP)训练之后的模型“货不对板”</a>
+  </h1>
+  <div class="post-meta">
+    
+    
+      <span class="post-author">chaos</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (28 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/python/">Python</a>&nbsp;
+      
+      #<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+    <div class="table-of-contents">
+      <h2>
+        目录
+      </h2>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#原因">原因</a></li>
+    <li><a href="#解决方案">解决方案</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+    </div>
+  
+
+  <div class="post-content"><div>
+        <h2 id="背景">背景<a href="#背景" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>之前介绍过Pytoch的<a href="https://blog.sp.chaos.autos/archives/9/">单机多卡训练</a>，当时采用的是内置的<code>nn.DataParallel()</code>方法</li>
+<li>经过单机多卡训练的模型保存checkpoint之后再次加载需要同样使用<code>DP()</code>对模型进行封装之后才能正常加载，否则会报错状态词典的键值对不上</li>
+</ul>
+<h2 id="原因">原因<a href="#原因" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>经过<code>DP()</code>封装之后的模型，其状态词典分别添加了<code>module.</code>的前缀，例如原参数为<code>hr_branch.conv_hr.1.layers.0.weight</code>，封装之后变成了<code>module.hr_branch.conv_hr.1.layers.0.weight</code>。</li>
+</ul>
+<h2 id="解决方案">解决方案<a href="#解决方案" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>在加载状态词典之前将该前缀进行替换，得到纯净的状态词典，则不再需要重新对模型进行<code>DP()</code>封装</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>ckp_state_dict <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>load(args<span style="color:#f92672">.</span>ckp, map_location<span style="color:#f92672">=</span>torch<span style="color:#f92672">.</span>device(<span style="color:#e6db74">&#34;cpu&#34;</span>))[<span style="color:#e6db74">&#34;model&#34;</span>]
+</span></span><span style="display:flex;"><span>ckp_state <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> k, v <span style="color:#f92672">in</span> ckp_state_dict<span style="color:#f92672">.</span>items():
+</span></span><span style="display:flex;"><span>    k <span style="color:#f92672">=</span> k<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;module.&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    ckp_state[k] <span style="color:#f92672">=</span> v
+</span></span></code></pre></div><h2 id="参考">参考<a href="#参考" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li><a href="https://szukevin.site/2021/02/27/MODNet%E8%BD%AC%E6%88%90torchscript%E5%BD%A2%E5%BC%8F%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/">文章</a></li>
+</ul>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/9/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Pytorch使用单机多卡训练</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/posts/24/">
+                <span class="button__text">Test</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="generator" content="Hugo 0.111.3">
+  
+    <title>Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A mechanic, forever." />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Chaos">
+<meta property="og:description" content="A mechanic, forever." />
+<meta property="og:url" content="/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/index.xml" rel="alternate" type="application/rss+xml" title="Chaos" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+    
+
+    
+    
+      
+    
+    
+
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/9/">Pytorch使用单机多卡训练</a>
+        </h1>
+
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/python/">Python</a>&nbsp;
+            
+            #<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            需求 对基于pytorch的深度学习模型进行多卡训练以加速训练过程 由于显卡版本过于老旧，安装配置NCCL工程量过于庞大，希望使用简单的pytorch代码实现单机多卡训练，不考虑多机多卡的显卡通信 训练完成后保存的checkpoint需要能够在任何设备上进行加载、推理 实现 训练 pytorch提供了简单的单机多卡训练api，只需要在初始化模型之后执行下列语句将模型复制到多卡上 # initiate multi-gpu training model = nn.DataParallel(model, device_ids=&lt;ids of the gpus you want to use&gt;) 其他操作与单卡训练完全一致 加载checkpoint 上述操作后保存的checkpoint如果按照常规方法直接进行加载会报错 RuntimeError: Error(s) in loading state_dict for &lt;ModelName&gt;: Missing key(s) in state_dict:... debug遍历后发现其实其状态字典是完全一致的，只是因为我们在训练过程中将模型定义为了多卡并行模型。这里只需要按照训练过程中转换为多卡模型的代码初始化当前模型结构即可，即执行： # initiate multi-gpu training model = nn.DataParallel(model, device_ids=&lt;ids of the gpus you want to use&gt;) 其他操作与征程推理完全一致，若不想使用多卡/只想使用cpu，只需要按照常规将device = torch.device(&quot;&lt;cpu/cuda:id&gt;&quot;)即可 Note：查阅资料过程中发现有解答建议使用参数强行忽略模型加载的错误torch.load(&lt;checkpoint&gt;, strict=False)，经测试，这样加载的模型啥也不是&hellip;不知道为什么pytorch官方要提供这个接口
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/9/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/20/">Pytorch单机多卡(DP)训练之后的模型“货不对板”</a>
+        </h1>
+
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/python/">Python</a>&nbsp;
+            
+            #<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            背景 之前介绍过Pytoch的单机多卡训练，当时采用的是内置的nn.DataParallel()方法 经过单机多卡训练的模型保存checkpoint之后再次加载需要同样使用DP()对模型进行封装之后才能正常加载，否则会报错状态词典的键值对不上 原因 经过DP()封装之后的模型，其状态词典分别添加了module.的前缀，例如原参数为hr_branch.conv_hr.1.layers.0.weight，封装之后变成了module.hr_branch.conv_hr.1.layers.0.weight。 解决方案 在加载状态词典之前将该前缀进行替换，得到纯净的状态词典，则不再需要重新对模型进行DP()封装 ckp_state_dict = torch.load(args.ckp, map_location=torch.device(&#34;cpu&#34;))[&#34;model&#34;] ckp_state = {} for k, v in ckp_state_dict.items(): k = k.replace(&#34;module.&#34;, &#34;&#34;) ckp_state[k] = v 参考 文章 
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/20/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/24/">Test</a>
+        </h1>
+
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+
+        
+
+
+        <div class="post-content">
+          
+            111
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/24/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/14/">Treafik反代保姆级急速上手</a>
+        </h1>
+
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/system/">System</a>&nbsp;
+            
+            #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            需求场景 所有需要反代的场景 服务器上部署了太多的docker、frp映射等服务，每个服务都占用着各自的端口，多的以至于为了记忆这些服务端口我专门要维护一个记事本&hellip; 什么是Treafik Traefik是一个开源的可以使得服务发布变得轻松有趣的 边缘路由器。它负责接收你系统的请求，然后使用合适的组件来对这些请求进行处理 Treafik可以自适应并动态自动发现你添加的所有服务、容器等等 Treafik适配了当前主流的所有服务技术（docker, k8s&hellip;），这意味着你可以一次配置，终生动态，非常适合我这种懒人&hellip; 正式使用 概念 这里用最直白的语言介绍traefik配置中的几个概念，对后边直接上手写配置有一定帮助，建议阅读
+静态配置 Traefik初始启动时会读取的配置文件，该配置仅读取一次，后面更改需要重启服务 主要包括 全局配置项（Global） 日志配置项（Log） 入口点（Entrypoints） 安全证书（TLS） 提供者声明（Provider） 该文件对应docker中/etc/traefik/traefik.yaml 容器启动时Traefik会自动在/etc/traefik/目录下寻找traefik.toml/traefik.yaml/traefik.yml文件作为其静态配置 Traefik提供了共三种互斥的静态配置方式，另外两种请自行查阅文档 动态配置 基本等同于各个来源的Provider配置 主要需要编辑的是File Provider文件，该文件包含了所有的动态路由，Traefik会自动检测文件改动并动态发现、添加路由（Router）、服务（Service） 提供者/Providers 简而言之所谓的“提供者”就是告诉Traefik要去哪儿发现所有的路由规则及其对应的服务地址 该角色（Provider）的独立决定了Traefik天生即适应多入口、多平台的自动适应发现 本教程中将只会展示两种Provider的配置方式，其他更多的请查阅文档 入口点/EntryPoints 即Traefik对外暴露的端口，理想状态下也是整台服务器对外暴露的唯一端口 所有的网络请求通过该端口到达Traefik并由其接管后进行反代分流及负载均衡 可以开设多个入口点，一般为80+443 路由/Routers Traefik对外暴露的规则及其对内的具体服务路由规则 在这里定义Traefik所接受的域名、前缀、后缀、路径等等请求规则 在这里定义Traefik在接受到特定请求时该路由到的服务/Services 服务/Services 路由所要代理的具体服务地址 这里可以添加由Traefik管理的负载均衡，后面还可以添加亲和性等高阶使用，具体请查阅文档 开始/Let the Traefik Go 这里采用docker的方式启动，docker-compose以及手动部署等方式请自行查阅文档
+Traefik主服务启动前 静态配置 静态配置需要在主服务启动之前完全确定下来并映射进容器/etc/traefik/中，主服务只会在启动、重启时读取一次，后续不再监控更改 文件名必须为traefik.yaml或traefik.tmol或traefik.yml 这里贴出我的配置，具体作用见配置项名或注释 ########################################### # # # Main Configuration File for Treafik # # By Chaos # # # ########################################### ## Global Config ## # --------------------------------------- # global: checkNewVersion: true sendAnonymousUsage: false # --------------------------------------- # ## Log Config ## # --------------------------------------- # log: # all the path is defined in the container # u need to map it outside filePath: &#34;/etc/logs/run.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/14/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/3/">windows下使用wsl2初体验</a>
+        </h1>
+
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/system/">System</a>&nbsp;
+            
+            #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            背景 尝试全面转向win作为主力开发系统，但是很多东西需要在linux下执行，wsl经历了一次技术路线的全面更新在网络上的反响也还是不错的。随机决定进行一下尝试 几点说明 本篇文章仅仅是小白从零开始进行wsl2配置，没有过wsl1的使用经验，里边的步骤也大多都是来自于万能的互联网 本篇文章不涉及深度使用的感受，后续体验之后有时间的话会再进行记录 概念 wsl全名windows subsystem for linux 开始安装 安装WSL2功能模块 该步骤下所有命令执行都在windows powershell(管理员模式)下
+打开wsl功能模块 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart 安装必要功能 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart 重启电脑，完成安装（重要，我被卡在这里很久） 设置内核安装默认为wsl2 powershell（管理员）执行wsl --set-default-version 2 这里正常的话是可以正常执行的，如果提示类似于需要升级wsl内核之类的信息的话，就需要手动更新一下wsl内核： 下载地址 下载完成双击打开一路下一步即可，无其他可选项 安装linux子系统 打开windows应用商店，搜索关键字linux 下载安装想要使用的linux发行版，等待安装完成 开始菜单启动一次刚刚安装的发行版，耐心等待安装完成 配置 以下配置以本人安装的Debain为例，步骤差不多，有一些命令可能会不一样
+换源 用预设源进行apt-get update，切记不能先换源，否则会出现错误 安装必要软件apt-get install ca-certificates 备份原源列表cp /etc/apt/sources.list /etc/apt/sources.list.backup 编辑源列表nano /etc/apt/sources.list 将源列表内容替换为下列内容 deb [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free # deb-src [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free deb [trusted=yes] https://mirrors.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/3/">Read more →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+      <a href="/" class="button previous">
+        <span class="button__icon">←</span>
+        <span class="button__text">Newer posts</span>
+      </a>
+    
+    
+      <a href="/page/3/" class="button next">
+        <span class="button__text">Older posts</span>
+        <span class="button__icon">→</span>
+      </a>
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

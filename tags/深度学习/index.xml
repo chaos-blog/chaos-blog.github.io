@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>深度学习 on Chaos</title>
+    <link>/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</link>
+    <description>Recent content in 深度学习 on Chaos</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>model.zero_grad() VS. optimzer.zero_grad()</title>
+      <link>/posts/12/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/12/</guid>
+      <description>引言 在模型训练时，每个Batch反向传播完成后我们需要手动清除计算图上本次迭代的所有梯度 在阅读不同的代码时，总能看到不同的清空代码： model.zero_grad() optimizer.zero_grad() 正文 上述两种梯度清空的方式均有效，区别在于起作用的范围不同 model.zero_grad() 此时mdoel包含的所有参数上的梯度均被清空 optimizer.zero_grad() 此时该优化器中负责更新的模型参数上的梯度被清空，即不一定是全部的梯度被清空 若模型训练过程中只有一个优化器，即优化器构造时使用 optimizer = optim.Optimiers(model.parameters(), lr=args.lr) 此时上述两种梯度清空方式完全等价 总结 两种不同的梯度清零方式在多数场景下基本等价，其区别在于作用范围不同 对于多任务训练、多优化器的训练中，需要根据具体训练策略的不同对参数梯度进行不同作用范围的清空 </description>
+      <content>&lt;h2 id=&#34;引言&#34;&gt;引言&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;在模型训练时，每个Batch反向传播完成后我们需要手动清除计算图上本次迭代的所有梯度&lt;/li&gt;
+&lt;li&gt;在阅读不同的代码时，总能看到不同的清空代码：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;model.zero_grad()&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;optimizer.zero_grad()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;正文&#34;&gt;正文&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;上述两种梯度清空的方式均有效，区别在于起作用的范围不同&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;model.zero_grad()&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;此时&lt;code&gt;mdoel&lt;/code&gt;包含的所有参数上的梯度均被清空&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;optimizer.zero_grad()&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;此时该优化器中负责更新的模型参数上的梯度被清空，即不一定是全部的梯度被清空&lt;/li&gt;
+&lt;li&gt;若模型训练过程中只有一个优化器，即优化器构造时使用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;   optimizer = optim.Optimiers(model.parameters(), lr=args.lr)
+&lt;/code&gt;&lt;/pre&gt;此时上述两种梯度清空方式完全等价&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;两种不同的梯度清零方式在多数场景下基本等价，其区别在于作用范围不同&lt;/li&gt;
+&lt;li&gt;对于多任务训练、多优化器的训练中，需要根据具体训练策略的不同对参数梯度进行不同作用范围的清空&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Pytorch使用单机多卡训练</title>
+      <link>/posts/9/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/9/</guid>
+      <description>需求 对基于pytorch的深度学习模型进行多卡训练以加速训练过程 由于显卡版本过于老旧，安装配置NCCL工程量过于庞大，希望使用简单的pytorch代码实现单机多卡训练，不考虑多机多卡的显卡通信 训练完成后保存的checkpoint需要能够在任何设备上进行加载、推理 实现 训练 pytorch提供了简单的单机多卡训练api，只需要在初始化模型之后执行下列语句将模型复制到多卡上 # initiate multi-gpu training model = nn.DataParallel(model, device_ids=&amp;lt;ids of the gpus you want to use&amp;gt;) 其他操作与单卡训练完全一致 加载checkpoint 上述操作后保存的checkpoint如果按照常规方法直接进行加载会报错 RuntimeError: Error(s) in loading state_dict for &amp;lt;ModelName&amp;gt;: Missing key(s) in state_dict:... debug遍历后发现其实其状态字典是完全一致的，只是因为我们在训练过程中将模型定义为了多卡并行模型。这里只需要按照训练过程中转换为多卡模型的代码初始化当前模型结构即可，即执行： # initiate multi-gpu training model = nn.DataParallel(model, device_ids=&amp;lt;ids of the gpus you want to use&amp;gt;) 其他操作与征程推理完全一致，若不想使用多卡/只想使用cpu，只需要按照常规将device = torch.device(&amp;quot;&amp;lt;cpu/cuda:id&amp;gt;&amp;quot;)即可 Note：查阅资料过程中发现有解答建议使用参数强行忽略模型加载的错误torch.load(&amp;lt;checkpoint&amp;gt;, strict=False)，经测试，这样加载的模型啥也不是&amp;hellip;不知道为什么pytorch官方要提供这个接口</description>
+      <content>&lt;h2 id=&#34;需求&#34;&gt;需求&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;对基于pytorch的深度学习模型进行多卡训练以加速训练过程&lt;/li&gt;
+&lt;li&gt;由于显卡版本过于老旧，安装配置NCCL工程量过于庞大，希望使用简单的pytorch代码实现单机多卡训练，不考虑多机多卡的显卡通信&lt;/li&gt;
+&lt;li&gt;训练完成后保存的checkpoint需要能够在任何设备上进行加载、推理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;实现&#34;&gt;实现&lt;/h2&gt;
+&lt;h3 id=&#34;训练&#34;&gt;训练&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;pytorch提供了简单的单机多卡训练api，只需要在初始化模型之后执行下列语句将模型复制到多卡上&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# initiate multi-gpu training&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;model &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; nn&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;DataParallel(model, device_ids&lt;span style=&#34;color:#f92672&#34;&gt;=&amp;lt;&lt;/span&gt;ids of the gpus you want to use&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;其他操作与单卡训练完全一致&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;加载checkpoint&#34;&gt;加载checkpoint&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;上述操作后保存的checkpoint如果按照常规方法直接进行加载会报错&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;RuntimeError&lt;/span&gt;: Error(s) &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; loading state_dict &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;ModelName&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	Missing key(s) &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; state_dict:&lt;span style=&#34;color:#f92672&#34;&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;debug遍历后发现其实其状态字典是完全一致的，只是因为我们在训练过程中将模型定义为了多卡并行模型。这里只需要按照训练过程中转换为多卡模型的代码初始化当前模型结构即可，即执行：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# initiate multi-gpu training&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;model &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; nn&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;DataParallel(model, device_ids&lt;span style=&#34;color:#f92672&#34;&gt;=&amp;lt;&lt;/span&gt;ids of the gpus you want to use&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;其他操作与征程推理完全一致，若不想使用多卡/只想使用cpu，只需要按照常规将&lt;code&gt;device = torch.device(&amp;quot;&amp;lt;cpu/cuda:id&amp;gt;&amp;quot;)&lt;/code&gt;即可&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Note：查阅资料过程中发现有解答建议使用参数强行忽略模型加载的错误&lt;code&gt;torch.load(&amp;lt;checkpoint&amp;gt;, strict=False)&lt;/code&gt;，经测试，这样加载的模型啥也不是&amp;hellip;不知道为什么pytorch官方要提供这个接口&lt;/strong&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Pytorch单机多卡(DP)训练之后的模型“货不对板”</title>
+      <link>/posts/20/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/20/</guid>
+      <description>背景 之前介绍过Pytoch的单机多卡训练，当时采用的是内置的nn.DataParallel()方法 经过单机多卡训练的模型保存checkpoint之后再次加载需要同样使用DP()对模型进行封装之后才能正常加载，否则会报错状态词典的键值对不上 原因 经过DP()封装之后的模型，其状态词典分别添加了module.的前缀，例如原参数为hr_branch.conv_hr.1.layers.0.weight，封装之后变成了module.hr_branch.conv_hr.1.layers.0.weight。 解决方案 在加载状态词典之前将该前缀进行替换，得到纯净的状态词典，则不再需要重新对模型进行DP()封装 ckp_state_dict = torch.load(args.ckp, map_location=torch.device(&amp;#34;cpu&amp;#34;))[&amp;#34;model&amp;#34;] ckp_state = {} for k, v in ckp_state_dict.items(): k = k.replace(&amp;#34;module.&amp;#34;, &amp;#34;&amp;#34;) ckp_state[k] = v 参考 文章 </description>
+      <content>&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;之前介绍过Pytoch的&lt;a href=&#34;https://blog.sp.chaos.autos/archives/9/&#34;&gt;单机多卡训练&lt;/a&gt;，当时采用的是内置的&lt;code&gt;nn.DataParallel()&lt;/code&gt;方法&lt;/li&gt;
+&lt;li&gt;经过单机多卡训练的模型保存checkpoint之后再次加载需要同样使用&lt;code&gt;DP()&lt;/code&gt;对模型进行封装之后才能正常加载，否则会报错状态词典的键值对不上&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;原因&#34;&gt;原因&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;经过&lt;code&gt;DP()&lt;/code&gt;封装之后的模型，其状态词典分别添加了&lt;code&gt;module.&lt;/code&gt;的前缀，例如原参数为&lt;code&gt;hr_branch.conv_hr.1.layers.0.weight&lt;/code&gt;，封装之后变成了&lt;code&gt;module.hr_branch.conv_hr.1.layers.0.weight&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;在加载状态词典之前将该前缀进行替换，得到纯净的状态词典，则不再需要重新对模型进行&lt;code&gt;DP()&lt;/code&gt;封装&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ckp_state_dict &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;load(args&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;ckp, map_location&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;device(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;cpu&amp;#34;&lt;/span&gt;))[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;model&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ckp_state &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; k, v &lt;span style=&#34;color:#f92672&#34;&gt;in&lt;/span&gt; ckp_state_dict&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;items():
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    k &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; k&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;replace(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;module.&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ckp_state[k] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; v
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://szukevin.site/2021/02/27/MODNet%E8%BD%AC%E6%88%90torchscript%E5%BD%A2%E5%BC%8F%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/&#34;&gt;文章&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>不同发行版安装NVIDIA-container-runtime</title>
+      <link>/posts/21/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/21/</guid>
+      <description>背景 NVIDIA-container-runtime是在docker容器中映射本机显卡必备的运行时 NVIDIA推出该工具之后搭配新版本的docker就不需要使用单独版本的docker启动支持显卡的容器 开始动手 添加安装源 官网比较难进，酌情查看
+Debian-based distributions Debian/Ubuntu/&amp;hellip;
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \ sudo apt-key add - distribution=$(. /etc/os-release;echo $ID$VERSION_ID) curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \ sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list sudo apt-get update RHEL-based distributions CentOS/Fedora/Oracle/&amp;hellip;
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID) curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.repo | \ sudo tee /etc/yum.repos.d/nvidia-container-runtime.repo 更新密钥 安装源来自于nvidia官网，可能会有些慢
+Debian-based distributions curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \ sudo apt-key add - RHEL-based distributions DIST=$(sed -n &amp;#39;s/releasever=//p&amp;#39; /etc/yum.conf) DIST=${DIST:-$(. /etc/os-release; echo $VERSION_ID)} sudo rpm -e gpg-pubkey-f796ecb0 sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/$DIST/nvidia-container-runtime/gpgdir --delete-key f796ecb0 安装 安装源来自于nvidia官网，可能会有些慢</description>
+      <content>&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;NVIDIA-container-runtime&lt;/strong&gt;是在docker容器中映射本机显卡必备的运行时&lt;/li&gt;
+&lt;li&gt;NVIDIA推出该工具之后搭配新版本的docker就不需要使用单独版本的docker启动支持显卡的容器&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;开始动手&#34;&gt;开始动手&lt;/h2&gt;
+&lt;h3 id=&#34;添加安装源&#34;&gt;添加安装源&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://nvidia.github.io/nvidia-container-runtime/&#34;&gt;官网&lt;/a&gt;比较难进，酌情查看&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;debian-based-distributions&#34;&gt;Debian-based distributions&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Debian/Ubuntu/&amp;hellip;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;  sudo apt-key add -
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;distribution&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;. /etc/os-release;echo $ID$VERSION_ID&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;  sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt-get update
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;rhel-based-distributions&#34;&gt;RHEL-based distributions&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;CentOS/Fedora/Oracle/&amp;hellip;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;distribution&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;. /etc/os-release;echo $ID$VERSION_ID&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.repo | &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;  sudo tee /etc/yum.repos.d/nvidia-container-runtime.repo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;更新密钥&#34;&gt;更新密钥&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;安装源来自于nvidia官网，可能会有些慢&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;debian-based-distributions-1&#34;&gt;Debian-based distributions&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;  sudo apt-key add -
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;rhel-based-distributions-1&#34;&gt;RHEL-based distributions&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;DIST&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;sed -n &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s/releasever=//p&amp;#39;&lt;/span&gt; /etc/yum.conf&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;DIST&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;DIST&lt;span style=&#34;color:#66d9ef&#34;&gt;:-$(&lt;/span&gt;. /etc/os-release; echo $VERSION_ID&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo rpm -e gpg-pubkey-f796ecb0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo gpg --homedir /var/lib/yum/repos/&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;uname -m&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;/$DIST/nvidia-container-runtime/gpgdir --delete-key f796ecb0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;安装&#34;&gt;安装&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;安装源来自于nvidia官网，可能会有些慢&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;debian-based-distributions-2&#34;&gt;Debian-based distributions&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo apt-get install nvidia-container-runtime
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;rhel-based-distributions-2&#34;&gt;RHEL-based distributions&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;sudo yum install nvidia-container-runtime
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/NVIDIA/nvidia-container-runtime&#34;&gt;NVIDIA container runtime repository&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://nvidia.github.io/nvidia-container-runtime/&#34;&gt;NVIDIA container runtime distributions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>深度学习中的预训练与自训练</title>
+      <link>/posts/5/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/5/</guid>
+      <description>几个概念 预训练 自训练 自监督学习 半监督学习 监督学习 无监督学习 区分 预训练 广义上讲：是对一个模型进行“预先训练”，以完成后续的下游任务 狭义上讲（更常用）：在大规模无标注语料上，用自监督的方式训练模型 自训练 常应用于CV领域 有一个Teacher模型$M_{teacher}$和一个Student模型$M_{student}$，首先在标注数据上训练$M_{teacher}$，然后用它对大规模无标注数据进行标注，把得到的结果(与少量有标签数据混合)当做伪标注数据去训练$M_{student}$ 使用少量的标记数据和大量的未标记数据对模型进行联合训练 预训练与自训练是同级概念，其中分别可以与“监督/半监督/无监督/自监督”进行组合 监督与无监督 无监督的典型任务是聚类算法 半监督 没有太多意义的一个概念 其中的代表即自训练，甚至基本等同 自监督 是狭义上“预训练”的实现方法 与完全不受监督的设置相比，自监督学习使用数据集本身的信息来构造伪标签 是一种具有监督形式的特殊形式的非监督学习方法 </description>
+      <content>&lt;h3 id=&#34;几个概念&#34;&gt;几个概念&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;预训练&lt;/li&gt;
+&lt;li&gt;自训练&lt;/li&gt;
+&lt;li&gt;自监督学习&lt;/li&gt;
+&lt;li&gt;半监督学习&lt;/li&gt;
+&lt;li&gt;监督学习&lt;/li&gt;
+&lt;li&gt;无监督学习&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;区分&#34;&gt;区分&lt;/h3&gt;
+&lt;h4 id=&#34;预训练&#34;&gt;预训练&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;广义上讲：是对一个模型进行“预先训练”，以完成后续的下游任务&lt;/li&gt;
+&lt;li&gt;狭义上讲（更常用）：在大规模无标注语料上，用自监督的方式训练模型&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;自训练&#34;&gt;自训练&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;常应用于CV领域&lt;/li&gt;
+&lt;li&gt;有一个Teacher模型$M_{teacher}$和一个Student模型$M_{student}$，首先在标注数据上训练$M_{teacher}$，然后用它对大规模无标注数据进行标注，把得到的结果(与少量有标签数据混合)当做伪标注数据去训练$M_{student}$&lt;/li&gt;
+&lt;li&gt;使用少量的标记数据和大量的未标记数据对模型进行联合训练
+&lt;strong&gt;预训练与自训练是同级概念，其中分别可以与“监督/半监督/无监督/自监督”进行组合&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;监督与无监督&#34;&gt;监督与无监督&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;无监督的典型任务是&lt;strong&gt;聚类算法&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;半监督&#34;&gt;半监督&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;没有太多意义的一个概念&lt;/li&gt;
+&lt;li&gt;其中的代表即自训练，甚至基本等同&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;自监督&#34;&gt;自监督&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;是狭义上“预训练”的实现方法&lt;/li&gt;
+&lt;li&gt;与完全不受监督的设置相比，自监督学习使用数据集本身的信息来构造伪标签&lt;/li&gt;
+&lt;li&gt;是一种具有监督形式的特殊形式的非监督学习方法&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>深度神经网络中seed函数</title>
+      <link>/posts/7/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/7/</guid>
+      <description>背景 在阅读代码过程中经常发现以下几种代码，尤其常见于pytorch书写的深度神经网络代码中 torch.manual_seed(seed) torch.cuda.manual_seed(seed) np.random.seed(seed) torch.cuda.manual_seed_all() 正文 经查询资料得出结论，该代码作用即为将模型在初始化过程中所用到的“随机数”全部固定下来，以保证每次重新训练模型需要初始化模型参数的时候能够得到相同的初始化参数，从而达到稳定复现训练结果的目的 参考资料 https://www.zhihu.com/question/288350769 https://cloud.tencent.com/developer/article/1149041 </description>
+      <content>&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;在阅读代码过程中经常发现以下几种代码，尤其常见于&lt;code&gt;pytorch&lt;/code&gt;书写的深度神经网络代码中&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;manual_seed(seed)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cuda&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;manual_seed(seed)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;np&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;random&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;seed(seed)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cuda&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;manual_seed_all()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;正文&#34;&gt;正文&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;经查询资料得出结论，该代码作用即为将模型在初始化过程中所用到的“随机数”全部固定下来，以保证每次重新训练模型需要初始化模型参数的时候能够得到相同的初始化参数，从而达到稳定复现训练结果的目的&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;参考资料&#34;&gt;参考资料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.zhihu.com/question/288350769&#34;&gt;https://www.zhihu.com/question/288350769&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cloud.tencent.com/developer/article/1149041&#34;&gt;https://cloud.tencent.com/developer/article/1149041&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

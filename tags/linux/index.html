@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Linux :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/tags/linux/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Linux">
+<meta property="og:description" content="" />
+<meta property="og:url" content="/tags/linux/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/linux/index.xml" rel="alternate" type="application/rss+xml" title="Chaos" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/22/">Linux下xargs的基本用法</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/system/">System</a>&nbsp;
+            
+            #<a href="/tags/linux/">Linux</a>&nbsp;
+            
+            #<a href="/tags/%E8%BF%90%E7%BB%B4/">运维</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            背景需求 遇到一个需要使用scp/rsync向远端传送当前文件夹下前n个文件的需求，若要一个一个的手输也不是不行，但总感觉有一些蠢
+解决方案 xargs功能强大 xargs（英文全拼： eXtended ARGuments）是给命令传递参数的一个过滤器，也是组合多个命令的一个工具。 xargs 可以将管道或标准输入（stdin）数据转换成命令行参数，也能够从文件的输出中读取数据。 xargs 也可以将单行或多行文本输入转换为其他格式，例如多行变单行，单行变多行。 xargs 是一个强有力的命令，它能够捕获一个命令的输出，然后传递给另外一个命令。 详解 首先是要拿到该文件夹下的前n个文件 ls | head -100
+利用rsync向远端传输文件 rsync -avzP &lt;file_names&gt; user@remote
+使用xargs省去手动输入文件列表 ls | head -100 |xargs -i rsync -avzP {} user@remote
+注意事项 args 默认的命令是 echo，这意味着通过管道传递给 xargs 的输入将会包含换行和空白，不过通过 xargs 的处理，换行和空白将被空格取代。 xargs 一般是和管道一起使用。 
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/22/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/21/">不同发行版安装NVIDIA-container-runtime</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+            
+            #<a href="/tags/system/">System</a>&nbsp;
+            
+            #<a href="/tags/linux/">Linux</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            背景 NVIDIA-container-runtime是在docker容器中映射本机显卡必备的运行时 NVIDIA推出该工具之后搭配新版本的docker就不需要使用单独版本的docker启动支持显卡的容器 开始动手 添加安装源 官网比较难进，酌情查看
+Debian-based distributions Debian/Ubuntu/&hellip;
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \ sudo apt-key add - distribution=$(. /etc/os-release;echo $ID$VERSION_ID) curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \ sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list sudo apt-get update RHEL-based distributions CentOS/Fedora/Oracle/&hellip;
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID) curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.repo | \ sudo tee /etc/yum.repos.d/nvidia-container-runtime.repo 更新密钥 安装源来自于nvidia官网，可能会有些慢
+Debian-based distributions curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \ sudo apt-key add - RHEL-based distributions DIST=$(sed -n &#39;s/releasever=//p&#39; /etc/yum.conf) DIST=${DIST:-$(. /etc/os-release; echo $VERSION_ID)} sudo rpm -e gpg-pubkey-f796ecb0 sudo gpg --homedir /var/lib/yum/repos/$(uname -m)/$DIST/nvidia-container-runtime/gpgdir --delete-key f796ecb0 安装 安装源来自于nvidia官网，可能会有些慢
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/21/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/18/">简单的shell脚本搭配Crontab实现linux定时备份设定文件(夹)</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+            
+            #<a href="/tags/linux/">Linux</a>&nbsp;
+            
+            #<a href="/tags/%E7%B3%BB%E7%BB%9F/">系统</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            场景 自用linux系统装在一块不是太稳定的硬盘里，很多服务启动脚本、docker容器脚本需要定期备份到另一块硬盘上 硬连接不适用于文件夹、跨盘连接 软链接在源文件丢失、挂掉的情况下会失效 解决方案 使用简单的一个shell脚本向目标位置复制需要备份的文件（夹） crontab是linux提供的定时任务，搭配上述脚本实现每xx时间自动执行shell脚本 脚本 services=( \ &#34;path/to/some/file/or/folder&#34; \ &#34;path/to/another/file/or/folder&#34; \ ) destination=&#34;/path/to/destination/folder/&#34; for elem in ${services[@]} do echo &#34;# Backuping $elem&#34; cp -r $elem $destination done echo &#34;--------------------------------&#34; date echo &#34;- All backup task completed! -&#34; echo &#34;--------------------------------&#34; echo &#34;--------------------------------&#34; echo -e &#34;\n\n&#34; 设置定时任务 打开定时任务编辑 crontab -e 添加任务 # backup all of my services at 3:50 every day 50 3 * * * bash /path/to/backup_services.sh &gt;&gt; /path/to/backup.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/18/">Read more →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

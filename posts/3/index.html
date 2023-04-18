@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>windows下使用wsl2初体验 :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="背景 尝试全面转向win作为主力开发系统，但是很多东西需要在linux下执行，wsl经历了一次技术路线的全面更新在网络上的反响也还是不错的。随机决定进行一下尝试 几点说明 本篇文章仅仅是小白从零开始进行wsl2配置，没有过wsl1的使用经验，里边的步骤也大多都是来自于万能的互联网 本篇文章不涉及深度使用的感受，后续体验之后有时间的话会再进行记录 概念 wsl全名windows subsystem for linux 开始安装 安装WSL2功能模块 该步骤下所有命令执行都在windows powershell(管理员模式)下
+打开wsl功能模块 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart 安装必要功能 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart 重启电脑，完成安装（重要，我被卡在这里很久） 设置内核安装默认为wsl2 powershell（管理员）执行wsl --set-default-version 2 这里正常的话是可以正常执行的，如果提示类似于需要升级wsl内核之类的信息的话，就需要手动更新一下wsl内核： 下载地址 下载完成双击打开一路下一步即可，无其他可选项 安装linux子系统 打开windows应用商店，搜索关键字linux 下载安装想要使用的linux发行版，等待安装完成 开始菜单启动一次刚刚安装的发行版，耐心等待安装完成 配置 以下配置以本人安装的Debain为例，步骤差不多，有一些命令可能会不一样
+换源 用预设源进行apt-get update，切记不能先换源，否则会出现错误 安装必要软件apt-get install ca-certificates 备份原源列表cp /etc/apt/sources.list /etc/apt/sources.list.backup 编辑源列表nano /etc/apt/sources.list 将源列表内容替换为下列内容 deb [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free # deb-src [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free deb [trusted=yes] https://mirrors." />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/3/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="chaos" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="windows下使用wsl2初体验">
+<meta property="og:description" content="背景 尝试全面转向win作为主力开发系统，但是很多东西需要在linux下执行，wsl经历了一次技术路线的全面更新在网络上的反响也还是不错的。随机决定进行一下尝试 几点说明 本篇文章仅仅是小白从零开始进行wsl2配置，没有过wsl1的使用经验，里边的步骤也大多都是来自于万能的互联网 本篇文章不涉及深度使用的感受，后续体验之后有时间的话会再进行记录 概念 wsl全名windows subsystem for linux 开始安装 安装WSL2功能模块 该步骤下所有命令执行都在windows powershell(管理员模式)下
+打开wsl功能模块 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart 安装必要功能 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart 重启电脑，完成安装（重要，我被卡在这里很久） 设置内核安装默认为wsl2 powershell（管理员）执行wsl --set-default-version 2 这里正常的话是可以正常执行的，如果提示类似于需要升级wsl内核之类的信息的话，就需要手动更新一下wsl内核： 下载地址 下载完成双击打开一路下一步即可，无其他可选项 安装linux子系统 打开windows应用商店，搜索关键字linux 下载安装想要使用的linux发行版，等待安装完成 开始菜单启动一次刚刚安装的发行版，耐心等待安装完成 配置 以下配置以本人安装的Debain为例，步骤差不多，有一些命令可能会不一样
+换源 用预设源进行apt-get update，切记不能先换源，否则会出现错误 安装必要软件apt-get install ca-certificates 备份原源列表cp /etc/apt/sources.list /etc/apt/sources.list.backup 编辑源列表nano /etc/apt/sources.list 将源列表内容替换为下列内容 deb [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free # deb-src [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free deb [trusted=yes] https://mirrors." />
+<meta property="og:url" content="/posts/3/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/3/">windows下使用wsl2初体验</a>
+  </h1>
+  <div class="post-meta">
+    
+    
+      <span class="post-author">chaos</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (182 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/system/">System</a>&nbsp;
+      
+      #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+    <div class="table-of-contents">
+      <h2>
+        目录
+      </h2>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#几点说明">几点说明</a></li>
+    <li><a href="#概念">概念</a></li>
+    <li><a href="#开始安装">开始安装</a>
+      <ul>
+        <li><a href="#安装wsl2功能模块">安装WSL2功能模块</a></li>
+        <li><a href="#设置内核安装默认为wsl2">设置内核安装默认为wsl2</a></li>
+        <li><a href="#安装linux子系统">安装linux子系统</a></li>
+      </ul>
+    </li>
+    <li><a href="#配置">配置</a>
+      <ul>
+        <li><a href="#换源">换源</a></li>
+        <li><a href="#代理上网">代理上网</a></li>
+        <li><a href="#美化shell窗口">美化shell窗口</a></li>
+        <li><a href="#python环境">Python环境</a></li>
+      </ul>
+    </li>
+    <li><a href="#写在最后">写在最后</a></li>
+  </ul>
+</nav>
+    </div>
+  
+
+  <div class="post-content"><div>
+        <h2 id="背景">背景<a href="#背景" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>尝试全面转向win作为主力开发系统，但是很多东西需要在linux下执行，wsl经历了一次技术路线的全面更新在网络上的反响也还是不错的。随机决定进行一下尝试</li>
+</ul>
+<h2 id="几点说明">几点说明<a href="#几点说明" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>本篇文章仅仅是小白从零开始进行wsl2配置，没有过wsl1的使用经验，里边的步骤也大多都是来自于万能的互联网</li>
+<li>本篇文章不涉及深度使用的感受，后续体验之后有时间的话会再进行记录</li>
+</ul>
+<h2 id="概念">概念<a href="#概念" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>wsl全名windows subsystem for linux</li>
+</ul>
+<h2 id="开始安装">开始安装<a href="#开始安装" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="安装wsl2功能模块">安装WSL2功能模块<a href="#安装wsl2功能模块" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<blockquote>
+<p><!-- raw HTML omitted -->该步骤下所有命令执行都在windows powershell(管理员模式)下<!-- raw HTML omitted --></p>
+</blockquote>
+<ul>
+<li>打开wsl功能模块
+<code>dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart</code></li>
+<li>安装必要功能
+<code>dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart</code></li>
+<li>重启电脑，完成安装（<strong>重要，我被卡在这里很久</strong>）</li>
+</ul>
+<h3 id="设置内核安装默认为wsl2">设置内核安装默认为wsl2<a href="#设置内核安装默认为wsl2" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>powershell（管理员）执行<code>wsl --set-default-version 2</code></li>
+<li>这里正常的话是可以正常执行的，如果提示类似于<!-- raw HTML omitted -->需要升级wsl内核<!-- raw HTML omitted -->之类的信息的话，就需要手动更新一下wsl内核：
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10#step-4---download-the-linux-kernel-update-package">下载地址</a></li>
+<li>下载完成双击打开一路下一步即可，无其他可选项</li>
+</ul>
+</li>
+</ul>
+<h3 id="安装linux子系统">安装linux子系统<a href="#安装linux子系统" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>打开windows应用商店，搜索关键字<code>linux</code></li>
+<li>下载安装想要使用的linux发行版，等待安装完成</li>
+<li>开始菜单启动一次刚刚安装的发行版，耐心等待安装完成</li>
+</ul>
+<h2 id="配置">配置<a href="#配置" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<blockquote>
+<p>以下配置以本人安装的<code>Debain</code>为例，步骤差不多，有一些命令可能会不一样</p>
+</blockquote>
+<h3 id="换源">换源<a href="#换源" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>用预设源进行<code>apt-get update</code>，<!-- raw HTML omitted -->切记不能先换源，否则会出现错误<!-- raw HTML omitted --></li>
+<li>安装必要软件<code>apt-get install ca-certificates</code></li>
+<li>备份原源列表<code>cp /etc/apt/sources.list /etc/apt/sources.list.backup</code></li>
+<li>编辑源列表<code>nano /etc/apt/sources.list</code></li>
+<li>将源列表内容替换为下列内容</li>
+</ul>
+<pre tabindex="0"><code>deb [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free
+# deb-src [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free
+deb [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-updates main contrib non-free
+#deb-src [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-updates main contrib non-free
+deb [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib non-free
+# deb-src [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib non-free
+deb [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian-security buster/updates main contrib non-free
+# deb-src [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian-security buster/updates main contrib non-free
+</code></pre><ul>
+<li>更新源列表<code>apt-get update</code></li>
+</ul>
+<h3 id="代理上网">代理上网<a href="#代理上网" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<blockquote>
+<p>wsl2采用了虚拟化技术，对于宿主机来说wsl是一个单独的虚拟网卡，等同于一张“公共网卡”，所以对于wsl2来讲，win宿主机的ip地址是网卡内部的ip，需要通过命令<code>cat /etc/resolv.conf | grep nameserver | awk '{ print $2 }'</code>进行查看，为了后文叙述方便，这里<strong>假设</strong>输出结果<code>192.168.1.2</code></p>
+</blockquote>
+<h4 id="方案一临时性全局科学仅对当前shell窗口生效">方案一：临时性全局科学，仅对当前shell窗口生效<a href="#方案一临时性全局科学仅对当前shell窗口生效" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>shell窗口直接执行<code>export ALL_PROXY=protocol://192.168.1.2:port</code></li>
+</ul>
+<h4 id="方案二软件解决每次需要科学的命令需要加上命令前缀">方案二：软件解决，每次需要科学的命令需要加上命令前缀<a href="#方案二软件解决每次需要科学的命令需要加上命令前缀" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>安装<code>apt-get install proxychains</code></li>
+<li>配置<code>nano /etc/proxychains.conf</code></li>
+<li>在文件末尾根据示例添加科学地址</li>
+</ul>
+<h3 id="美化shell窗口">美化shell窗口<a href="#美化shell窗口" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>安装zsh: <code>apt-get install zsh</code></li>
+<li>安装oh-my-zsh: <code>sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;</code></li>
+<li>配置oh-my-zsh:
+<ul>
+<li><a href="https://github.com/Microsoft/console/releases">下载</a>最新版本对shell窗口进行优化</li>
+<li><a href="https://raw.githubusercontent.com/tonsky/FiraCode/master/distr/ttf/FiraCode-Retina.ttf">下载</a>字体并安装</li>
+<li>安装<code>zsh</code>神级插件：</li>
+</ul>
+<pre tabindex="0"><code>  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+</code></pre><ul>
+<li>编辑<code>nano ~/.zshrc</code>
+<ul>
+<li>找到<code>ZSH_THEME</code>修改为<code>agnoster</code></li>
+<li>找到<code>plugins</code>并在后边添加想启用的插件，以空格为分隔符<code>git zsh-syntax-highlighting zsh-autosuggestions</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="python环境">Python环境<a href="#python环境" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ul>
+<li>为了后期方便，这里采用conda对python环境进行统一管理</li>
+<li>由于wsl完全占用C盘空间，所以尽量选择最小安装，节省空间。Anaconda官方预算3G空间，Miniconda完全安装完大概1G左右，故选择miniconda进行安装</li>
+<li>步骤
+<ul>
+<li>定位到用户目录<code>cd ~</code></li>
+<li><a href="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh">下载</a>Miniconda(python3.8)安装脚本</li>
+<li>执行脚本，并根据脚本提示进行安装<code>bash Miniconda3-latest-Linux-x86_64.sh</code></li>
+<li>安装完成，关闭当前shell窗口并重新开启</li>
+<li>执行<code>python -V</code>验证安装结果</li>
+</ul>
+</li>
+</ul>
+<h2 id="写在最后">写在最后<a href="#写在最后" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>zsh的其他美化以及插件功能还有很多，读者可以自行进行调研使用</li>
+<li>至此wsl2内核的debian系统已经达到能用的状态</li>
+<li>在这之前作者也是一个坚定的win/linux双系统使用者，只是近来由于一些原因必须要迁移到win平台，才发现其实在微软这么多年的深耕之下，全球有太多的软件公司都为win做了太多的优化，无论从美观程度、易用程度、更新速度方面都远超linux平台下的软件。而现在win也在深耕wsl，更是给了win一个很大的机会，“在不重启的情况下使用两个系统”，听起来就很不错。在搜索资料的过程中偶然瞥到wsl2现在已经支持了GPU，这对深度学习工作者来讲更是一个天大的好消息，同时也发现wsl对于ntfs的io慢到令人发指，作者目前还没有感受到，只能是进行深度体验后再说。无论如何，系统融合对于开发者来讲都是一个天大的好事。</li>
+</ul>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/14/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Treafik反代保姆级急速上手</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/posts/11/">
+                <span class="button__text">windows平台下配置Texlive&#43;Texstudio书写LaTex文本</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

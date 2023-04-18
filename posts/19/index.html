@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Debian使用kvm&#43;qemu&#43;cockpit搭建带有webui的虚拟机管理系统 :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="背景 在自己的nas上安装了纯debian系统，向拥有媲美pve的虚拟机管理流程但同时又不想重装一遍系统，故而经过一番搜索，发现目前主流的linux系虚拟机管理基本都是kvm&#43;qemu。但这同时带来一个新的问题，我目前使用的是非gui版本的系统，同时由于mobaxterm的卡顿只能忍痛割爱其X-server功能转为termius，因此我并不能使用传统的vir-manager对虚拟机进行创建、管理等等。在搜索后发现同样由redhat出品的cockpitwebui管理端，借助websocket等技术，完美实现了对物理机的闭环管理以及虚拟机的管理。
+软件介绍 kvm qemu cockpit 操作步骤 得益于kvm等等一干软件的开发团队以及巨大用户量，上述三个软件的安装非常简单，yum/apt/...等主流发行版的包管理器均内置了其完整的安装包；这里以debian为例
+安装kvm&#43;qemu Step-1：检查设备是都支持虚拟化技术 执行 当输出大于0则支持 egrep -c &amp;#39;(vmx|svm)&amp;#39; /proc/cpuinfo 执行kvm-ok 当输出如下则支持内核级虚拟化，若找不到命令则安装apt install cpu-checker INFO: /dev/kvm exists KVM acceleration can be used Step-2：安装KVM&#43;qemu 执行下列命令 apt install qemu qemu-kvm libvirt-daemon libvirt-clients bridge-utils virt-manager 软件概述 **qemu：**允许进行硬件级虚拟化 qemu-kvm：kvm主程序，现已经更名为qemu-system-x86 **libvritd-daemon：**虚拟化守护程序 **bridge-utils：**虚拟网桥支持 **virt-manager：**基于x-server的虚拟机gui管理（本过程中非必须，但是最好装） Step-3：修改qemu运行权限，避免后期的虚拟机权限问题 使用你喜欢的编辑器编辑/etc/libvirt/qemu.conf 取消下列字段的注释 # Some examples of valid values are: # # user = &amp;#34;qemu&amp;#34; # A user named &amp;#34;qemu&amp;#34; # user = &amp;#34;&#43;0&amp;#34; # Super user (uid=0) # user = &amp;#34;100&amp;#34; # A user named &amp;#34;100&amp;#34; or a user with uid=100 # user = &amp;#34;root&amp;#34; # The group for QEMU processes run by the system instance." />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/19/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="chaos" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Debian使用kvm&#43;qemu&#43;cockpit搭建带有webui的虚拟机管理系统">
+<meta property="og:description" content="背景 在自己的nas上安装了纯debian系统，向拥有媲美pve的虚拟机管理流程但同时又不想重装一遍系统，故而经过一番搜索，发现目前主流的linux系虚拟机管理基本都是kvm&#43;qemu。但这同时带来一个新的问题，我目前使用的是非gui版本的系统，同时由于mobaxterm的卡顿只能忍痛割爱其X-server功能转为termius，因此我并不能使用传统的vir-manager对虚拟机进行创建、管理等等。在搜索后发现同样由redhat出品的cockpitwebui管理端，借助websocket等技术，完美实现了对物理机的闭环管理以及虚拟机的管理。
+软件介绍 kvm qemu cockpit 操作步骤 得益于kvm等等一干软件的开发团队以及巨大用户量，上述三个软件的安装非常简单，yum/apt/...等主流发行版的包管理器均内置了其完整的安装包；这里以debian为例
+安装kvm&#43;qemu Step-1：检查设备是都支持虚拟化技术 执行 当输出大于0则支持 egrep -c &amp;#39;(vmx|svm)&amp;#39; /proc/cpuinfo 执行kvm-ok 当输出如下则支持内核级虚拟化，若找不到命令则安装apt install cpu-checker INFO: /dev/kvm exists KVM acceleration can be used Step-2：安装KVM&#43;qemu 执行下列命令 apt install qemu qemu-kvm libvirt-daemon libvirt-clients bridge-utils virt-manager 软件概述 **qemu：**允许进行硬件级虚拟化 qemu-kvm：kvm主程序，现已经更名为qemu-system-x86 **libvritd-daemon：**虚拟化守护程序 **bridge-utils：**虚拟网桥支持 **virt-manager：**基于x-server的虚拟机gui管理（本过程中非必须，但是最好装） Step-3：修改qemu运行权限，避免后期的虚拟机权限问题 使用你喜欢的编辑器编辑/etc/libvirt/qemu.conf 取消下列字段的注释 # Some examples of valid values are: # # user = &amp;#34;qemu&amp;#34; # A user named &amp;#34;qemu&amp;#34; # user = &amp;#34;&#43;0&amp;#34; # Super user (uid=0) # user = &amp;#34;100&amp;#34; # A user named &amp;#34;100&amp;#34; or a user with uid=100 # user = &amp;#34;root&amp;#34; # The group for QEMU processes run by the system instance." />
+<meta property="og:url" content="/posts/19/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/19/">Debian使用kvm+qemu+cockpit搭建带有webui的虚拟机管理系统</a>
+  </h1>
+  <div class="post-meta">
+    
+    
+      <span class="post-author">chaos</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (161 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+      
+      #<a href="/tags/%E7%B3%BB%E7%BB%9F/">系统</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+    <div class="table-of-contents">
+      <h2>
+        目录
+      </h2>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#软件介绍">软件介绍</a></li>
+    <li><a href="#操作步骤">操作步骤</a>
+      <ul>
+        <li><a href="#安装kvmqemu">安装kvm+qemu</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+  
+
+  <div class="post-content"><div>
+        <h2 id="背景">背景<a href="#背景" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>  在自己的nas上安装了纯debian系统，向拥有媲美pve的虚拟机管理流程但同时又不想重装一遍系统，故而经过一番搜索，发现目前主流的linux系虚拟机管理基本都是kvm+qemu。但这同时带来一个新的问题，我目前使用的是非gui版本的系统，同时由于mobaxterm的卡顿只能忍痛割爱其X-server功能转为termius，因此我并不能使用传统的vir-manager对虚拟机进行创建、管理等等。在搜索后发现同样由redhat出品的<code>cockpit</code>webui管理端，借助websocket等技术，完美实现了对物理机的闭环管理以及虚拟机的管理。</p>
+<h2 id="软件介绍">软件介绍<a href="#软件介绍" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>kvm</li>
+<li>qemu</li>
+<li>cockpit</li>
+</ul>
+<h2 id="操作步骤">操作步骤<a href="#操作步骤" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<blockquote>
+<p>得益于kvm等等一干软件的开发团队以及巨大用户量，上述三个软件的安装非常简单，<code>yum/apt/...</code>等主流发行版的包管理器均内置了其完整的安装包；这里以debian为例</p>
+</blockquote>
+<h3 id="安装kvmqemu">安装kvm+qemu<a href="#安装kvmqemu" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<h4 id="step-1检查设备是都支持虚拟化技术">Step-1：检查设备是都支持虚拟化技术<a href="#step-1检查设备是都支持虚拟化技术" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>执行
+<ul>
+<li>当输出大于<strong>0</strong>则支持</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>  egrep -c <span style="color:#e6db74">&#39;(vmx|svm)&#39;</span> /proc/cpuinfo
+</span></span></code></pre></div></li>
+<li>执行<code>kvm-ok</code>
+<ul>
+<li>当输出如下则支持内核级虚拟化，若找不到命令则安装<code>apt install cpu-checker</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>  INFO: /dev/kvm exists
+</span></span><span style="display:flex;"><span>  KVM acceleration can be used
+</span></span></code></pre></div></li>
+</ul>
+<h4 id="step-2安装kvmqemu">Step-2：安装KVM+qemu<a href="#step-2安装kvmqemu" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>执行下列命令</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>apt install qemu qemu-kvm libvirt-daemon libvirt-clients bridge-utils virt-manager
+</span></span></code></pre></div><ul>
+<li>软件概述
+<ul>
+<li>**qemu：**允许进行硬件级虚拟化</li>
+<li><strong>qemu-kvm：<strong>kvm主程序，现已经更名为</strong>qemu-system-x86</strong></li>
+<li>**libvritd-daemon：**虚拟化守护程序</li>
+<li>**bridge-utils：**虚拟网桥支持</li>
+<li>**virt-manager：**基于x-server的虚拟机gui管理（本过程中非必须，但是最好装）</li>
+</ul>
+</li>
+</ul>
+<h4 id="step-3修改qemu运行权限避免后期的虚拟机权限问题">Step-3：修改qemu运行权限，避免后期的虚拟机权限问题<a href="#step-3修改qemu运行权限避免后期的虚拟机权限问题" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>使用你喜欢的编辑器编辑<code>/etc/libvirt/qemu.conf </code></li>
+<li>取消下列字段的注释</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># Some examples of valid values are:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#       user = &#34;qemu&#34;   # A user named &#34;qemu&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#       user = &#34;+0&#34;     # Super user (uid=0)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#       user = &#34;100&#34;    # A user named &#34;100&#34; or a user with uid=100</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span>user <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;root&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The group for QEMU processes run by the system instance. It can be</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># specified in a similar way to user.</span>
+</span></span><span style="display:flex;"><span>group <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;root&#34;</span>
+</span></span></code></pre></div><ul>
+<li>重启虚拟化服务<code>systemctl restart libvirtd</code></li>
+</ul>
+<h4 id="step-4创建虚拟网桥方便后面创建的虚拟机直通路由而非走宿主机的nat">Step-4：创建虚拟网桥，方便后面创建的虚拟机直通路由，而非走宿主机的NAT<a href="#step-4创建虚拟网桥方便后面创建的虚拟机直通路由而非走宿主机的nat" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>查看系统内网络<code>ip a</code></li>
+<li>确保没有<code>br0</code>，以及记录当前的物理网卡（拿到真的路由分配地址的那个）是哪个，这里假定<code>enp2s0</code></li>
+<li>使用你喜欢的编辑器编辑<code>/etc/network/interfaces</code></li>
+<li>添加下列字段</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># The kvm bridge</span>
+</span></span><span style="display:flex;"><span>auto br0
+</span></span><span style="display:flex;"><span>iface br0 inet dhcp
+</span></span><span style="display:flex;"><span>bridge_ports enp2s0
+</span></span><span style="display:flex;"><span>bridge_stp off
+</span></span><span style="display:flex;"><span>bridge_fd <span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><ul>
+<li>重启网络服务，<!-- raw HTML omitted -->这里会导致ssh断链、ip地址重新获取等意外事件，不要惊慌<!-- raw HTML omitted --></li>
+</ul>
+<h4 id="step-5安装cockpit">Step-5：安装cockpit<a href="#step-5安装cockpit" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>执行<code>apt install cockpit</code></li>
+<li>为了让cockpit支持虚拟机管理，需要安装插件<code>apt install cockpit-machines</code></li>
+<li>启动cockpit并开启开机自启<code>systemctl start cockpit &amp;&amp; systemctl enable cockpit</code></li>
+</ul>
+<h4 id="step-6访问cockpit">Step-6：访问cockpit<a href="#step-6访问cockpit" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>cockpit默认监听<code>https://&lt;host-ip&gt;:9090</code></li>
+<li>使用系统内任意账户登录</li>
+</ul>
+<h4 id="step-7享受现代科技">Step-7：享受现代科技<a href="#step-7享受现代科技" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>cockpit提供了非常多可视化的linux设备管理，并且易于使用</li>
+<li>后面如果有机会或者有难踩的坑的话或许会新开一篇单独对cockpit的虚拟机管理进行介绍</li>
+</ul>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/23/">
+                <span class="button__icon">←</span>
+                <span class="button__text">aoimysql配合mysql使用时的query缓存坑</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/posts/22/">
+                <span class="button__text">Linux下xargs的基本用法</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

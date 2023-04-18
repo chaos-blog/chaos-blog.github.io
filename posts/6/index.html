@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>python中的print()函数深度使用 :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="背景 今天读代码的过程中发现了一种很有意思的print()写法 每一个程序员对每一种语言最熟悉的不过于各种“hello world”，这也不可避免的造成了我们对最熟悉的print()语句最为“陌生” 主题 对于python中print()函数的参数深度使用方法 语法 print(*values, [sep=&amp;quot;&amp;quot;, end=&amp;quot;&amp;quot;, file=&amp;quot;&amp;quot;, flush=&amp;quot;&amp;quot;]) 参数 *values 必需 要输出的内容，可以是任何类型对象 同时输出多个对象时，需要用,隔开 sep 可选 同时输出多个对象时的分隔符 默认空格 end 可选 输出最后一个对象之后的结尾符 默认是一个\n，即换行 file 可选 要打印输出到的“设备” 默认为输出到当前终端，可以指定已打开的文件对象 对文件是否追加更新由上下文的open()中的a/w参数指定 flush 可选 整成情况下输出是否被缓存（是否等待文件对象关闭前同一写入）由file对象决定，但如果指定为Ture则print()会强制立即将内容刷新进文件 一般用不到 " />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/6/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="chaos" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="python中的print()函数深度使用">
+<meta property="og:description" content="背景 今天读代码的过程中发现了一种很有意思的print()写法 每一个程序员对每一种语言最熟悉的不过于各种“hello world”，这也不可避免的造成了我们对最熟悉的print()语句最为“陌生” 主题 对于python中print()函数的参数深度使用方法 语法 print(*values, [sep=&amp;quot;&amp;quot;, end=&amp;quot;&amp;quot;, file=&amp;quot;&amp;quot;, flush=&amp;quot;&amp;quot;]) 参数 *values 必需 要输出的内容，可以是任何类型对象 同时输出多个对象时，需要用,隔开 sep 可选 同时输出多个对象时的分隔符 默认空格 end 可选 输出最后一个对象之后的结尾符 默认是一个\n，即换行 file 可选 要打印输出到的“设备” 默认为输出到当前终端，可以指定已打开的文件对象 对文件是否追加更新由上下文的open()中的a/w参数指定 flush 可选 整成情况下输出是否被缓存（是否等待文件对象关闭前同一写入）由file对象决定，但如果指定为Ture则print()会强制立即将内容刷新进文件 一般用不到 " />
+<meta property="og:url" content="/posts/6/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/6/">python中的print()函数深度使用</a>
+  </h1>
+  <div class="post-meta">
+    
+    
+      <span class="post-author">chaos</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (34 words)</span>
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="/tags/python/">Python</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+    <div class="table-of-contents">
+      <h2>
+        目录
+      </h2>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#主题">主题</a></li>
+    <li><a href="#语法">语法</a></li>
+    <li><a href="#参数">参数</a></li>
+  </ul>
+</nav>
+    </div>
+  
+
+  <div class="post-content"><div>
+        <h2 id="背景">背景<a href="#背景" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>今天读代码的过程中发现了一种很有意思的print()写法</li>
+<li>每一个程序员对每一种语言最熟悉的不过于各种“hello world”，这也不可避免的造成了我们对最熟悉的print()语句最为“陌生”</li>
+</ul>
+<h2 id="主题">主题<a href="#主题" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>对于python中print()函数的参数深度使用方法</li>
+</ul>
+<h2 id="语法">语法<a href="#语法" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>print(*values, [sep=&quot;&quot;, end=&quot;&quot;, file=&quot;&quot;, flush=&quot;&quot;])</li>
+</ul>
+<h2 id="参数">参数<a href="#参数" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>*values
+<ul>
+<li>必需</li>
+<li>要输出的内容，可以是任何类型对象</li>
+<li>同时输出多个对象时，需要用,隔开</li>
+</ul>
+</li>
+<li>sep
+<ul>
+<li>可选</li>
+<li>同时输出多个对象时的分隔符</li>
+<li>默认空格</li>
+</ul>
+</li>
+<li>end
+<ul>
+<li>可选</li>
+<li>输出最后一个对象之后的结尾符</li>
+<li>默认是一个\n，即换行</li>
+</ul>
+</li>
+<li>file
+<ul>
+<li>可选</li>
+<li>要打印输出到的“设备”</li>
+<li>默认为输出到当前终端，可以指定已打开的文件对象</li>
+<li>对文件是否追加更新由上下文的open()中的a/w参数指定</li>
+</ul>
+</li>
+<li>flush
+<ul>
+<li>可选</li>
+<li>整成情况下输出是否被缓存（是否等待文件对象关闭前同一写入）由file对象决定，但如果指定为Ture则print()会强制立即将内容刷新进文件</li>
+<li>一般用不到</li>
+</ul>
+</li>
+</ul>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/12/">
+                <span class="button__icon">←</span>
+                <span class="button__text">model.zero_grad() VS. optimzer.zero_grad()</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/posts/9/">
+                <span class="button__text">Pytorch使用单机多卡训练</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

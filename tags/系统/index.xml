@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>系统 on Chaos</title>
+    <link>/tags/%E7%B3%BB%E7%BB%9F/</link>
+    <description>Recent content in 系统 on Chaos</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="/tags/%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Debian使用kvm&#43;qemu&#43;cockpit搭建带有webui的虚拟机管理系统</title>
+      <link>/posts/19/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/19/</guid>
+      <description>背景 在自己的nas上安装了纯debian系统，向拥有媲美pve的虚拟机管理流程但同时又不想重装一遍系统，故而经过一番搜索，发现目前主流的linux系虚拟机管理基本都是kvm+qemu。但这同时带来一个新的问题，我目前使用的是非gui版本的系统，同时由于mobaxterm的卡顿只能忍痛割爱其X-server功能转为termius，因此我并不能使用传统的vir-manager对虚拟机进行创建、管理等等。在搜索后发现同样由redhat出品的cockpitwebui管理端，借助websocket等技术，完美实现了对物理机的闭环管理以及虚拟机的管理。
+软件介绍 kvm qemu cockpit 操作步骤 得益于kvm等等一干软件的开发团队以及巨大用户量，上述三个软件的安装非常简单，yum/apt/...等主流发行版的包管理器均内置了其完整的安装包；这里以debian为例
+安装kvm+qemu Step-1：检查设备是都支持虚拟化技术 执行 当输出大于0则支持 egrep -c &amp;#39;(vmx|svm)&amp;#39; /proc/cpuinfo 执行kvm-ok 当输出如下则支持内核级虚拟化，若找不到命令则安装apt install cpu-checker INFO: /dev/kvm exists KVM acceleration can be used Step-2：安装KVM+qemu 执行下列命令 apt install qemu qemu-kvm libvirt-daemon libvirt-clients bridge-utils virt-manager 软件概述 **qemu：**允许进行硬件级虚拟化 qemu-kvm：kvm主程序，现已经更名为qemu-system-x86 **libvritd-daemon：**虚拟化守护程序 **bridge-utils：**虚拟网桥支持 **virt-manager：**基于x-server的虚拟机gui管理（本过程中非必须，但是最好装） Step-3：修改qemu运行权限，避免后期的虚拟机权限问题 使用你喜欢的编辑器编辑/etc/libvirt/qemu.conf 取消下列字段的注释 # Some examples of valid values are: # # user = &amp;#34;qemu&amp;#34; # A user named &amp;#34;qemu&amp;#34; # user = &amp;#34;+0&amp;#34; # Super user (uid=0) # user = &amp;#34;100&amp;#34; # A user named &amp;#34;100&amp;#34; or a user with uid=100 # user = &amp;#34;root&amp;#34; # The group for QEMU processes run by the system instance.</description>
+      <content>&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+&lt;p&gt;  在自己的nas上安装了纯debian系统，向拥有媲美pve的虚拟机管理流程但同时又不想重装一遍系统，故而经过一番搜索，发现目前主流的linux系虚拟机管理基本都是kvm+qemu。但这同时带来一个新的问题，我目前使用的是非gui版本的系统，同时由于mobaxterm的卡顿只能忍痛割爱其X-server功能转为termius，因此我并不能使用传统的vir-manager对虚拟机进行创建、管理等等。在搜索后发现同样由redhat出品的&lt;code&gt;cockpit&lt;/code&gt;webui管理端，借助websocket等技术，完美实现了对物理机的闭环管理以及虚拟机的管理。&lt;/p&gt;
+&lt;h2 id=&#34;软件介绍&#34;&gt;软件介绍&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;kvm&lt;/li&gt;
+&lt;li&gt;qemu&lt;/li&gt;
+&lt;li&gt;cockpit&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;操作步骤&#34;&gt;操作步骤&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;得益于kvm等等一干软件的开发团队以及巨大用户量，上述三个软件的安装非常简单，&lt;code&gt;yum/apt/...&lt;/code&gt;等主流发行版的包管理器均内置了其完整的安装包；这里以debian为例&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;安装kvmqemu&#34;&gt;安装kvm+qemu&lt;/h3&gt;
+&lt;h4 id=&#34;step-1检查设备是都支持虚拟化技术&#34;&gt;Step-1：检查设备是都支持虚拟化技术&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;执行
+&lt;ul&gt;
+&lt;li&gt;当输出大于&lt;strong&gt;0&lt;/strong&gt;则支持&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  egrep -c &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;(vmx|svm)&amp;#39;&lt;/span&gt; /proc/cpuinfo
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;执行&lt;code&gt;kvm-ok&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;当输出如下则支持内核级虚拟化，若找不到命令则安装&lt;code&gt;apt install cpu-checker&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  INFO: /dev/kvm exists
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  KVM acceleration can be used
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;step-2安装kvmqemu&#34;&gt;Step-2：安装KVM+qemu&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;执行下列命令&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;apt install qemu qemu-kvm libvirt-daemon libvirt-clients bridge-utils virt-manager
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;软件概述
+&lt;ul&gt;
+&lt;li&gt;**qemu：**允许进行硬件级虚拟化&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;qemu-kvm：&lt;strong&gt;kvm主程序，现已经更名为&lt;/strong&gt;qemu-system-x86&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;**libvritd-daemon：**虚拟化守护程序&lt;/li&gt;
+&lt;li&gt;**bridge-utils：**虚拟网桥支持&lt;/li&gt;
+&lt;li&gt;**virt-manager：**基于x-server的虚拟机gui管理（本过程中非必须，但是最好装）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;step-3修改qemu运行权限避免后期的虚拟机权限问题&#34;&gt;Step-3：修改qemu运行权限，避免后期的虚拟机权限问题&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;使用你喜欢的编辑器编辑&lt;code&gt;/etc/libvirt/qemu.conf &lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;取消下列字段的注释&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Some examples of valid values are:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#       user = &amp;#34;qemu&amp;#34;   # A user named &amp;#34;qemu&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#       user = &amp;#34;+0&amp;#34;     # Super user (uid=0)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#       user = &amp;#34;100&amp;#34;    # A user named &amp;#34;100&amp;#34; or a user with uid=100&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;root&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The group for QEMU processes run by the system instance. It can be&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# specified in a similar way to user.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;group &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;root&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;重启虚拟化服务&lt;code&gt;systemctl restart libvirtd&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;step-4创建虚拟网桥方便后面创建的虚拟机直通路由而非走宿主机的nat&#34;&gt;Step-4：创建虚拟网桥，方便后面创建的虚拟机直通路由，而非走宿主机的NAT&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;查看系统内网络&lt;code&gt;ip a&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;确保没有&lt;code&gt;br0&lt;/code&gt;，以及记录当前的物理网卡（拿到真的路由分配地址的那个）是哪个，这里假定&lt;code&gt;enp2s0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;使用你喜欢的编辑器编辑&lt;code&gt;/etc/network/interfaces&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;添加下列字段&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# The kvm bridge&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;auto br0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;iface br0 inet dhcp
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;bridge_ports enp2s0
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;bridge_stp off
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;bridge_fd &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;重启网络服务，&lt;!-- raw HTML omitted --&gt;这里会导致ssh断链、ip地址重新获取等意外事件，不要惊慌&lt;!-- raw HTML omitted --&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;step-5安装cockpit&#34;&gt;Step-5：安装cockpit&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;执行&lt;code&gt;apt install cockpit&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;为了让cockpit支持虚拟机管理，需要安装插件&lt;code&gt;apt install cockpit-machines&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;启动cockpit并开启开机自启&lt;code&gt;systemctl start cockpit &amp;amp;&amp;amp; systemctl enable cockpit&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;step-6访问cockpit&#34;&gt;Step-6：访问cockpit&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;cockpit默认监听&lt;code&gt;https://&amp;lt;host-ip&amp;gt;:9090&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;使用系统内任意账户登录&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;step-7享受现代科技&#34;&gt;Step-7：享受现代科技&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;cockpit提供了非常多可视化的linux设备管理，并且易于使用&lt;/li&gt;
+&lt;li&gt;后面如果有机会或者有难踩的坑的话或许会新开一篇单独对cockpit的虚拟机管理进行介绍&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>简单的shell脚本搭配Crontab实现linux定时备份设定文件(夹)</title>
+      <link>/posts/18/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/18/</guid>
+      <description>场景 自用linux系统装在一块不是太稳定的硬盘里，很多服务启动脚本、docker容器脚本需要定期备份到另一块硬盘上 硬连接不适用于文件夹、跨盘连接 软链接在源文件丢失、挂掉的情况下会失效 解决方案 使用简单的一个shell脚本向目标位置复制需要备份的文件（夹） crontab是linux提供的定时任务，搭配上述脚本实现每xx时间自动执行shell脚本 脚本 services=( \ &amp;#34;path/to/some/file/or/folder&amp;#34; \ &amp;#34;path/to/another/file/or/folder&amp;#34; \ ) destination=&amp;#34;/path/to/destination/folder/&amp;#34; for elem in ${services[@]} do echo &amp;#34;# Backuping $elem&amp;#34; cp -r $elem $destination done echo &amp;#34;--------------------------------&amp;#34; date echo &amp;#34;- All backup task completed! -&amp;#34; echo &amp;#34;--------------------------------&amp;#34; echo &amp;#34;--------------------------------&amp;#34; echo -e &amp;#34;\n\n&amp;#34; 设置定时任务 打开定时任务编辑 crontab -e 添加任务 # backup all of my services at 3:50 every day 50 3 * * * bash /path/to/backup_services.sh &amp;gt;&amp;gt; /path/to/backup.</description>
+      <content>&lt;h1 id=&#34;场景&#34;&gt;场景&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;自用linux系统装在一块不是太稳定的硬盘里，很多服务启动脚本、docker容器脚本需要定期备份到另一块硬盘上&lt;/li&gt;
+&lt;li&gt;硬连接不适用于文件夹、跨盘连接&lt;/li&gt;
+&lt;li&gt;软链接在源文件丢失、挂掉的情况下会失效&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;解决方案&#34;&gt;解决方案&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;使用简单的一个shell脚本向目标位置复制需要备份的文件（夹）&lt;/li&gt;
+&lt;li&gt;crontab是linux提供的定时任务，搭配上述脚本实现每xx时间自动执行shell脚本&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;脚本&#34;&gt;脚本&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; services&lt;span style=&#34;color:#f92672&#34;&gt;=(&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;path/to/some/file/or/folder&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;path/to/another/file/or/folder&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;destination&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/path/to/destination/folder/&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; elem in &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;services[@]&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;# Backuping &lt;/span&gt;$elem&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    cp -r $elem $destination
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;--------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;date
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;- All backup task completed! -&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;--------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;--------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;echo -e &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\n\n&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;设置定时任务&#34;&gt;设置定时任务&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;打开定时任务编辑 &lt;code&gt;crontab -e&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;添加任务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# backup all of my services at 3:50 every day&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; * * * bash /path/to/backup_services.sh &amp;gt;&amp;gt; /path/to/backup.logs 2&amp;gt;&amp;amp;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &amp;amp;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;保存查看&lt;code&gt;crontab -l&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

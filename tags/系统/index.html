@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>系统 :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/tags/%E7%B3%BB%E7%BB%9F/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="系统">
+<meta property="og:description" content="" />
+<meta property="og:url" content="/tags/%E7%B3%BB%E7%BB%9F/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/%E7%B3%BB%E7%BB%9F/index.xml" rel="alternate" type="application/rss+xml" title="Chaos" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/19/">Debian使用kvm+qemu+cockpit搭建带有webui的虚拟机管理系统</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+            
+            #<a href="/tags/%E7%B3%BB%E7%BB%9F/">系统</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            背景 在自己的nas上安装了纯debian系统，向拥有媲美pve的虚拟机管理流程但同时又不想重装一遍系统，故而经过一番搜索，发现目前主流的linux系虚拟机管理基本都是kvm+qemu。但这同时带来一个新的问题，我目前使用的是非gui版本的系统，同时由于mobaxterm的卡顿只能忍痛割爱其X-server功能转为termius，因此我并不能使用传统的vir-manager对虚拟机进行创建、管理等等。在搜索后发现同样由redhat出品的cockpitwebui管理端，借助websocket等技术，完美实现了对物理机的闭环管理以及虚拟机的管理。
+软件介绍 kvm qemu cockpit 操作步骤 得益于kvm等等一干软件的开发团队以及巨大用户量，上述三个软件的安装非常简单，yum/apt/...等主流发行版的包管理器均内置了其完整的安装包；这里以debian为例
+安装kvm+qemu Step-1：检查设备是都支持虚拟化技术 执行 当输出大于0则支持 egrep -c &#39;(vmx|svm)&#39; /proc/cpuinfo 执行kvm-ok 当输出如下则支持内核级虚拟化，若找不到命令则安装apt install cpu-checker INFO: /dev/kvm exists KVM acceleration can be used Step-2：安装KVM+qemu 执行下列命令 apt install qemu qemu-kvm libvirt-daemon libvirt-clients bridge-utils virt-manager 软件概述 **qemu：**允许进行硬件级虚拟化 qemu-kvm：kvm主程序，现已经更名为qemu-system-x86 **libvritd-daemon：**虚拟化守护程序 **bridge-utils：**虚拟网桥支持 **virt-manager：**基于x-server的虚拟机gui管理（本过程中非必须，但是最好装） Step-3：修改qemu运行权限，避免后期的虚拟机权限问题 使用你喜欢的编辑器编辑/etc/libvirt/qemu.conf 取消下列字段的注释 # Some examples of valid values are: # # user = &#34;qemu&#34; # A user named &#34;qemu&#34; # user = &#34;+0&#34; # Super user (uid=0) # user = &#34;100&#34; # A user named &#34;100&#34; or a user with uid=100 # user = &#34;root&#34; # The group for QEMU processes run by the system instance.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/19/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/18/">简单的shell脚本搭配Crontab实现linux定时备份设定文件(夹)</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+            
+            #<a href="/tags/linux/">Linux</a>&nbsp;
+            
+            #<a href="/tags/%E7%B3%BB%E7%BB%9F/">系统</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            场景 自用linux系统装在一块不是太稳定的硬盘里，很多服务启动脚本、docker容器脚本需要定期备份到另一块硬盘上 硬连接不适用于文件夹、跨盘连接 软链接在源文件丢失、挂掉的情况下会失效 解决方案 使用简单的一个shell脚本向目标位置复制需要备份的文件（夹） crontab是linux提供的定时任务，搭配上述脚本实现每xx时间自动执行shell脚本 脚本 services=( \ &#34;path/to/some/file/or/folder&#34; \ &#34;path/to/another/file/or/folder&#34; \ ) destination=&#34;/path/to/destination/folder/&#34; for elem in ${services[@]} do echo &#34;# Backuping $elem&#34; cp -r $elem $destination done echo &#34;--------------------------------&#34; date echo &#34;- All backup task completed! -&#34; echo &#34;--------------------------------&#34; echo &#34;--------------------------------&#34; echo -e &#34;\n\n&#34; 设置定时任务 打开定时任务编辑 crontab -e 添加任务 # backup all of my services at 3:50 every day 50 3 * * * bash /path/to/backup_services.sh &gt;&gt; /path/to/backup.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/18/">Read more →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

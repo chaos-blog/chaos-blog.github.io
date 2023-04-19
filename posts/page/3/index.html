@@ -132,6 +132,46 @@
     
       <article class="post on-list">
         <h1 class="post-title">
+          <a href="/posts/11/">windows平台下配置Texlive+Texstudio书写LaTex文本</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/%E8%AE%BA%E6%96%87/">论文</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            概念 LaTex：LaTeX，是一种基于TeX的排版系统，由美国计算机科学家莱斯利·兰伯特在20世纪80年代初期开发，利用这种格式系统的处理，即使用户没有排版和程序设计的知识也可以充分发挥由TeX所提供的强大功能，不必一一亲自去设计或校对。类似于Markdown，LaTex是一种更强大的自排版标签语言，相对来讲，其学习曲线较陡峭一些。 TexLive：不同于Markdown编辑器自带编译功能，LaTex受限于更强大的排版引擎、更丰富的宏包支持，需要单独的编辑器、编译器搭配使用（这一点非常类似于编程语言，所以将LaTex理解为一种特殊的编程语言也是没有问题的）TexLive是全平台支持的一款编译器，其自带一个简单的编辑器但是通常不被人使用，对中文支持较好，宏包相对齐全。 TexStudio：使用QT开发的LaTex前端编辑器，支持调用系统已安装TexLive编译，启动速度快，功能all in one，ui相对较为美观，配置简单上手迅速。 不同配置搭配 TexLive + TexStudio TexLive + VSCode &hellip; 需求 快速上手LaTex，满足学术论文书写需求 配置简单，功能相对齐全 解决方案 屡次尝试VSCode作为编辑器但是不料遇到各种奇奇怪怪的问题，随即放弃转而寻找一款专业编辑器
+安装TexLive
+Texlive全量安装大约需要7~6G的空间，其安装包需要4.1G空间，安装之前请保证空间足够
+使用清华镜像源下载全量安装包，官方建议使用网络安装包但是众所周知我们的网络状况经常会出状况&hellip; win下直接点击下载好的iso挂载虚拟光驱 右键install-tl-windows.bat使用管理员身份运行，等待安装GUI加载完成 点击Customize按照下图所示进行配置 点击确定，安装；等待20~60分钟不等，向导会将编译器所需要的依赖、宏包全量安装，过程中不需要联网 安装TexStudio
+下载安装包 根据安装向导一路下一步即可 Note:
+后面有时间的话会再多进行几次尝试，看下到底哪个编译、编辑器组合比较好，后续再进行记录 对于基本的LaTex的文章语法，值得单独开一篇文章进行记录 
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/11/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
           <a href="/posts/8/">不同Linux发行版添加新用户并设置权限</a>
         </h1>
         <div class="post-meta">
@@ -288,44 +328,6 @@ Debian-based distributions curl -s -L https://nvidia.github.io/nvidia-container-
         
           <div>
             <a class="read-more button" href="/posts/4/">Read more →</a>
-          </div>
-        
-      </article>
-    
-      <article class="post on-list">
-        <h1 class="post-title">
-          <a href="/posts/17/">使用wireguard&amp;wg-easy快速实现异地组网</a>
-        </h1>
-        <div class="post-meta">
-          
-          
-            <span class="post-author">chaos</span>
-          
-        </div>
-
-        
-          <span class="post-tags">
-            
-            #<a href="/tags/system/">System</a>&nbsp;
-            
-            #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
-            
-          </span>
-        
-
-        
-
-
-        <div class="post-content">
-          
-            背景 WireGuard：是一个现代化的基于Linux内核态运行的高效、优雅的跨平台VPN实现方案；底层协议采用UDP进行数据传输 wg-easy：是一个使用Vue+wireguard开发的快速启动、管理、监控wg服务的docker镜像 需求： 异地组网：n台互相在异地的机器相互组成一个局域网并各自拥有自己在该虚拟内网中的独立ip地址，实现无障碍安全互访 无公网ip：这里不做标题党，具体的网络拓扑是： 1台具备公网ip的服务器 n-1台不具备公网ip并且藏在无数层NAT之后的机器 解决方案 总体思路 使用具备公网ip的服务器作为wg服务端，所有在vpn内的机器直接通过该设备进行流量转发 wg-easy启动在公网ip服务器，并统一通过面板为客户机下发配置文件 其他设备直接本机安装wg作为客户端 启动服务端（具备公网ip的机器） 这里采用docker-compose的方式进行启动，由于wg-easy具备一个漂亮的管理面板，故使用traefik对其进行管理
-建立启动配置文件 version: &#34;3.8&#34; services: wg-easy: environment: # ⚠️ Required: # Change this to your host&#39;s public address - WG_HOST=&lt;ur host domain&gt; # - WG_DEFAULT_DNS=192.168.2.1 - WG_ALLOWED_IPS=&lt;set default ACL in the clients&gt; # Optional: - PASSWORD=&lt;web ui&#39;s password&gt; # - WG_PORT=51820 - WG_DEFAULT_ADDRESS=10.8.0.x # - WG_MTU=1420 image: weejewel/wg-easy container_name: wg_easy volumes: - &lt;path_to_host&gt;:/etc/wireguard # ports: # - &#34;51820:51820/udp&#34; # control port(main) # - &#34;51821:51821/tcp&#34; # web ui port network_mode: &#34;host&#34; # ⚠️Required restart: unless-stopped cap_add: - NET_ADMIN - SYS_MODULE labels: - traefik.
-          
-        </div>
-
-        
-          <div>
-            <a class="read-more button" href="/posts/17/">Read more →</a>
           </div>
         
       </article>

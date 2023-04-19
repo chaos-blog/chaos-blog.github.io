@@ -2,6 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>/posts/test/</loc>
+  </url><url>
     <loc>/posts/23/</loc>
   </url><url>
     <loc>/categories/</loc>
@@ -31,6 +33,8 @@
     <loc>/tags/system/</loc>
   </url><url>
     <loc>/tags/</loc>
+  </url><url>
+    <loc>/tags/temp/</loc>
   </url><url>
     <loc>/posts/14/</loc>
   </url><url>

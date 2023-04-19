@@ -5,18 +5,7 @@
     <link>/tags/</link>
     <description>Recent content in Tags on Chaos</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Wed, 19 Apr 2023 07:07:10 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>temp</title>
-      <link>/tags/temp/</link>
-      <pubDate>Wed, 19 Apr 2023 07:07:10 +0000</pubDate>
-      
-      <guid>/tags/temp/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
+    <language>en-us</language><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Docker</title>
       <link>/tags/docker/</link>

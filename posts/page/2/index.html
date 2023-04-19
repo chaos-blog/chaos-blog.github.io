@@ -132,41 +132,6 @@
     
       <article class="post on-list">
         <h1 class="post-title">
-          <a href="/posts/6/">python中的print()函数深度使用</a>
-        </h1>
-        <div class="post-meta">
-          
-          
-            <span class="post-author">chaos</span>
-          
-        </div>
-
-        
-          <span class="post-tags">
-            
-            #<a href="/tags/python/">Python</a>&nbsp;
-            
-          </span>
-        
-
-        
-
-
-        <div class="post-content">
-          
-            背景 今天读代码的过程中发现了一种很有意思的print()写法 每一个程序员对每一种语言最熟悉的不过于各种“hello world”，这也不可避免的造成了我们对最熟悉的print()语句最为“陌生” 主题 对于python中print()函数的参数深度使用方法 语法 print(*values, [sep=&quot;&quot;, end=&quot;&quot;, file=&quot;&quot;, flush=&quot;&quot;]) 参数 *values 必需 要输出的内容，可以是任何类型对象 同时输出多个对象时，需要用,隔开 sep 可选 同时输出多个对象时的分隔符 默认空格 end 可选 输出最后一个对象之后的结尾符 默认是一个\n，即换行 file 可选 要打印输出到的“设备” 默认为输出到当前终端，可以指定已打开的文件对象 对文件是否追加更新由上下文的open()中的a/w参数指定 flush 可选 整成情况下输出是否被缓存（是否等待文件对象关闭前同一写入）由file对象决定，但如果指定为Ture则print()会强制立即将内容刷新进文件 一般用不到 
-          
-        </div>
-
-        
-          <div>
-            <a class="read-more button" href="/posts/6/">Read more →</a>
-          </div>
-        
-      </article>
-    
-      <article class="post on-list">
-        <h1 class="post-title">
           <a href="/posts/9/">Pytorch使用单机多卡训练</a>
         </h1>
         <div class="post-meta">
@@ -313,6 +278,46 @@ Traefik主服务启动前 静态配置 静态配置需要在主服务启动之�
         
           <div>
             <a class="read-more button" href="/posts/3/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/11/">windows平台下配置Texlive+Texstudio书写LaTex文本</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/%E8%AE%BA%E6%96%87/">论文</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            概念 LaTex：LaTeX，是一种基于TeX的排版系统，由美国计算机科学家莱斯利·兰伯特在20世纪80年代初期开发，利用这种格式系统的处理，即使用户没有排版和程序设计的知识也可以充分发挥由TeX所提供的强大功能，不必一一亲自去设计或校对。类似于Markdown，LaTex是一种更强大的自排版标签语言，相对来讲，其学习曲线较陡峭一些。 TexLive：不同于Markdown编辑器自带编译功能，LaTex受限于更强大的排版引擎、更丰富的宏包支持，需要单独的编辑器、编译器搭配使用（这一点非常类似于编程语言，所以将LaTex理解为一种特殊的编程语言也是没有问题的）TexLive是全平台支持的一款编译器，其自带一个简单的编辑器但是通常不被人使用，对中文支持较好，宏包相对齐全。 TexStudio：使用QT开发的LaTex前端编辑器，支持调用系统已安装TexLive编译，启动速度快，功能all in one，ui相对较为美观，配置简单上手迅速。 不同配置搭配 TexLive + TexStudio TexLive + VSCode &hellip; 需求 快速上手LaTex，满足学术论文书写需求 配置简单，功能相对齐全 解决方案 屡次尝试VSCode作为编辑器但是不料遇到各种奇奇怪怪的问题，随即放弃转而寻找一款专业编辑器
+安装TexLive
+Texlive全量安装大约需要7~6G的空间，其安装包需要4.1G空间，安装之前请保证空间足够
+使用清华镜像源下载全量安装包，官方建议使用网络安装包但是众所周知我们的网络状况经常会出状况&hellip; win下直接点击下载好的iso挂载虚拟光驱 右键install-tl-windows.bat使用管理员身份运行，等待安装GUI加载完成 点击Customize按照下图所示进行配置 点击确定，安装；等待20~60分钟不等，向导会将编译器所需要的依赖、宏包全量安装，过程中不需要联网 安装TexStudio
+下载安装包 根据安装向导一路下一步即可 Note:
+后面有时间的话会再多进行几次尝试，看下到底哪个编译、编辑器组合比较好，后续再进行记录 对于基本的LaTex的文章语法，值得单独开一篇文章进行记录 
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/11/">Read more →</a>
           </div>
         
       </article>

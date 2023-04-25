@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Knowledge :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/tags/knowledge/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Knowledge">
+<meta property="og:description" content="" />
+<meta property="og:url" content="/tags/knowledge/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+  <link href="/tags/knowledge/index.xml" rel="alternate" type="application/rss+xml" title="Chaos" />
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+  
+  <div class="posts">
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/%E4%BA%A4%E6%8D%A2%E6%9C%BA%E4%B8%AD%E7%9A%84%E9%95%9C%E5%83%8F/">交换机中的“镜像”</a>
+        </h1>
+        <div class="post-meta">
+          
+            <time class="post-date">
+              2023-04-25 ::
+            </time>
+          
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/knowledge/">Knowledge</a>&nbsp;
+            
+            #<a href="/tags/network/">Network</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            写在开头 “镜像”这个词其实对应着计算机领域内两个（或许更多）截然不同的概念，这两个概念并没有谁更常用之类的区别，因此在使用时需要根据当时当刻的上下文信息进行不同的区分：
+Image(镜像)：这类一般出现在“系统镜像（iso文件）”、“容器镜像（docker）”这类语境下，其指代的是一个物理存在的数据文件，这个文件往往是某个运行环境的静态存储，即根据该镜像可以run起来一些需要被保留的状态现场等。 Mirror(镜像)：顾名思义，将某个东西“照镜子”一样的照搬过来，供给下游应用；这种语境下，镜像指代的是对某些数据、流量或者状态进行无差别/有差别的转发，“镜像”操作关注于（转发源，转发目的地）两个概念。 正文 交换机中的“镜像”使用的是“mirror”词义，即对网络流量的有条件/无条件转发，供给下游监控、漏扫等应用进行使用。
+什么是交换机镜像 镜像是将指定“源（source）”的网络流量（这里指报文）完整的复制一份到“目的地（destination）”。目的地与监控、漏扫设备直接或者间接相连，在很多情况下，监控设备上都会安装相应的流量分析软件，对镜像转发的报文进行进一步的分析 当网络中出现存在攻击流量或者故障报文时，网管可以使用镜像功能无损的接入该网络，抓取报文进行分析排障等 根据镜像源的不同，交换机镜像往往可以分为如下几种： 端口镜像：将指定端口的流量转发到目标端口 流镜像：将流经网络设备的所有符合规则（Access Control List, ACL）的报文镜像转发的目标端口 VLAN镜像：将指定VLAN（Virtual Local Area Network）内所有活动网络接口的报文镜像转发到目标端口 MAC镜像：将指定VLAN内的从“源MAC地址”到“目标MAC地址”设备的报文进行镜像转发到目标端口 根据目的端口与监控设备的连接方式，可以分为如下两类： 本地镜像：源端口与目标端口在同一个设备上，与监控设备直接物理互连 远程镜像：源端口和目标端口不在同一个设备或部分在同一个设备上，与监控设备通过网络互联 Notes：镜像的目标都是一个“端口”，但源可能是网络设备、端口或者物理接口等多种不同的设备
+镜像的工作原理 交换机镜像的工作原理差不多，这里仅以最常见的端口镜像作为例子进行说明
+端口镜像是将网络设备上指定端口接收或发送的报文复制到目的端口，可以只复制端口接收或者发送的报文，也可以同时复制接收和发送的报文。指定端口称为镜像端口，目标端口称为观察端口。 本地镜像 如上图所示，DeviceA上的镜像端口（源）在接收或发送报文的时候，会将报文复制一份到观察端口（目标）。观察端口与监控设备直接相连，接收复制的原始报文进行进一步的分析处理等，因此本实例是一个典型的本地镜像 远程镜像 远程镜像通常有两种连接方式：
+目的端口通过二层网络与监控设备相连的场景称为二层远程镜像RSPAN（Remote Switched Port Analyzer） 目的端口通过三层网络与监控设备相连的场景称为三层远程镜像ERSPAN（Encapsulated Remote Switched Port Analyzer） 上图是一个典型的远程镜像实例，观察端口将复制的报文发送给监控设备前会添加一层VLAN Tag或进行GRE封装，便于复制的报文能够穿过中间的二层网络/三层网络，到达监控设备。
+总结 总的来讲，交换机镜像是为了方便网络管理员进行网络内探查、排障或者漏扫等等操作而提出的一种概念，本质上是对网络内的特定或非特定数据流量进行无条件或有条件的转发，以便下游的监控、漏扫或分析工具获取到原始数据流，并对其进行进一步的分析等。
+参考资料 华为设备百科-镜像 
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/%E4%BA%A4%E6%8D%A2%E6%9C%BA%E4%B8%AD%E7%9A%84%E9%95%9C%E5%83%8F/">Read more →</a>
+          </div>
+        
+      </article>
+    
+
+    <div class="pagination">
+  <div class="pagination__buttons">
+    
+    
+  </div>
+</div>
+
+  </div>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

@@ -5,7 +5,7 @@
     <link>/tags/python/</link>
     <description>Recent content in Python on Chaos</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <language>en</language><atom:link href="/tags/python/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>model.zero_grad() VS. optimzer.zero_grad()</title>
       <link>/posts/12/</link>

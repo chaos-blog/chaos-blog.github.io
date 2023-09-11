@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta name="generator" content="Hugo 0.111.3">
+	<meta name="generator" content="Hugo 0.118.2">
   
     <title>Chaos</title>
   
@@ -294,24 +294,16 @@ Traefik主服务启动前 静态配置 静态配置需要在主服务启动之�
     
       <article class="post on-list">
         <h1 class="post-title">
-          <a href="/posts/3/">windows下使用wsl2初体验</a>
+          <a href="/posts/2023-08-28-vscode_python_language_server%E5%8D%A1%E9%A1%BF/">VsCode中，Python插件的Python Language Server造成的卡顿问题</a>
         </h1>
 
         <div class="post-meta">
           
           
-            <span class="post-author">chaos</span>
+            <span class="post-author">Chaos</span>
           
         </div>
 
-        
-          <span class="post-tags">
-            
-            #<a href="/tags/system/">System</a>&nbsp;
-            
-            #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
-            
-          </span>
         
 
         
@@ -319,15 +311,13 @@ Traefik主服务启动前 静态配置 静态配置需要在主服务启动之�
 
         <div class="post-content">
           
-            背景 尝试全面转向win作为主力开发系统，但是很多东西需要在linux下执行，wsl经历了一次技术路线的全面更新在网络上的反响也还是不错的。随机决定进行一下尝试 几点说明 本篇文章仅仅是小白从零开始进行wsl2配置，没有过wsl1的使用经验，里边的步骤也大多都是来自于万能的互联网 本篇文章不涉及深度使用的感受，后续体验之后有时间的话会再进行记录 概念 wsl全名windows subsystem for linux 开始安装 安装WSL2功能模块 该步骤下所有命令执行都在windows powershell(管理员模式)下
-打开wsl功能模块 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart 安装必要功能 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart 重启电脑，完成安装（重要，我被卡在这里很久） 设置内核安装默认为wsl2 powershell（管理员）执行wsl --set-default-version 2 这里正常的话是可以正常执行的，如果提示类似于需要升级wsl内核之类的信息的话，就需要手动更新一下wsl内核： 下载地址 下载完成双击打开一路下一步即可，无其他可选项 安装linux子系统 打开windows应用商店，搜索关键字linux 下载安装想要使用的linux发行版，等待安装完成 开始菜单启动一次刚刚安装的发行版，耐心等待安装完成 配置 以下配置以本人安装的Debain为例，步骤差不多，有一些命令可能会不一样
-换源 用预设源进行apt-get update，切记不能先换源，否则会出现错误 安装必要软件apt-get install ca-certificates 备份原源列表cp /etc/apt/sources.list /etc/apt/sources.list.backup 编辑源列表nano /etc/apt/sources.list 将源列表内容替换为下列内容 deb [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free # deb-src [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free deb [trusted=yes] https://mirrors.
+            症状提要 使用VsCode很长时间了，作为Python的主力开发IDE真的蛮不错，但是最近在连接服务器进行远程开发时，总是会遇到代码提示完全出不来，整个VSCode像是一个完全没有任何代码功能的文本编辑器，摸黑写代码 经过一番痛苦的问题定位，发现log中有一点线索： Ctrl+P打开命令面板，输入&gt; Python: Language Server show output （忘记保留截图了）日志里有很明显的language-server启动行，但是启动之后一直在检索整个项目文件夹，在超过timeout之后会报出一条wraning提示说&quot;检索时间过长&quot;，但是很明显，server仍然会在后台继续检索，并不会抛出异常 到这里，问题线索就比较清晰了，我的文件夹下包含有大量的非代码文件（如数据集/音频wav/音频flac等），vscode的python-laguage-server不停的在检索这类文件，在未检索完成之前是不会有任何代码提示的 解决方案 pyrightconfig.json是python-language-server的配置文件,可以通过在配置文件中指定排除项来跳过其对该目录项的检索,从而加速整个检索过程,解决vsc卡顿的问题 配置示例: { &#34;exclude&#34;: [ &#34;data&#34; ] } 其中，exclude项是一个数组，可以自由增加所需要忽略的项，遵循.*ignore的书写规范 注意 该文件只能放在项目根目录，我尝试过放在.vscode下，language-server并不会主动读取 
           
         </div>
 
         
           <div>
-            <a class="read-more button" href="/posts/3/">Read more →</a>
+            <a class="read-more button" href="/posts/2023-08-28-vscode_python_language_server%E5%8D%A1%E9%A1%BF/">Read more →</a>
           </div>
         
       </article>

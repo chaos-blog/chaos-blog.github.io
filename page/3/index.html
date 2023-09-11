@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta name="generator" content="Hugo 0.111.3">
+	<meta name="generator" content="Hugo 0.118.2">
   
     <title>Chaos</title>
   
@@ -139,6 +139,46 @@
     
     
 
+    
+      <article class="post on-list">
+        <h1 class="post-title">
+          <a href="/posts/3/">windows下使用wsl2初体验</a>
+        </h1>
+
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/system/">System</a>&nbsp;
+            
+            #<a href="/tags/%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8/">日常使用</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            背景 尝试全面转向win作为主力开发系统，但是很多东西需要在linux下执行，wsl经历了一次技术路线的全面更新在网络上的反响也还是不错的。随机决定进行一下尝试 几点说明 本篇文章仅仅是小白从零开始进行wsl2配置，没有过wsl1的使用经验，里边的步骤也大多都是来自于万能的互联网 本篇文章不涉及深度使用的感受，后续体验之后有时间的话会再进行记录 概念 wsl全名windows subsystem for linux 开始安装 安装WSL2功能模块 该步骤下所有命令执行都在windows powershell(管理员模式)下
+打开wsl功能模块 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart 安装必要功能 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart 重启电脑，完成安装（重要，我被卡在这里很久） 设置内核安装默认为wsl2 powershell（管理员）执行wsl --set-default-version 2 这里正常的话是可以正常执行的，如果提示类似于需要升级wsl内核之类的信息的话，就需要手动更新一下wsl内核： 下载地址 下载完成双击打开一路下一步即可，无其他可选项 安装linux子系统 打开windows应用商店，搜索关键字linux 下载安装想要使用的linux发行版，等待安装完成 开始菜单启动一次刚刚安装的发行版，耐心等待安装完成 配置 以下配置以本人安装的Debain为例，步骤差不多，有一些命令可能会不一样
+换源 用预设源进行apt-get update，切记不能先换源，否则会出现错误 安装必要软件apt-get install ca-certificates 备份原源列表cp /etc/apt/sources.list /etc/apt/sources.list.backup 编辑源列表nano /etc/apt/sources.list 将源列表内容替换为下列内容 deb [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free # deb-src [trusted=yes] https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free deb [trusted=yes] https://mirrors.
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/3/">Read more →</a>
+          </div>
+        
+      </article>
     
       <article class="post on-list">
         <h1 class="post-title">
@@ -304,45 +344,6 @@ Debian-based distributions curl -s -L https://nvidia.github.io/nvidia-container-
         
           <div>
             <a class="read-more button" href="/posts/10/">Read more →</a>
-          </div>
-        
-      </article>
-    
-      <article class="post on-list">
-        <h1 class="post-title">
-          <a href="/posts/4/">使用Docker将python应用打包为images</a>
-        </h1>
-
-        <div class="post-meta">
-          
-          
-            <span class="post-author">chaos</span>
-          
-        </div>
-
-        
-          <span class="post-tags">
-            
-            #<a href="/tags/%E5%88%86%E4%BA%AB/">分享</a>&nbsp;
-            
-            #<a href="/tags/docker/">Docker</a>&nbsp;
-            
-          </span>
-        
-
-        
-
-
-        <div class="post-content">
-          
-            需求描述 正常运行的sanic应用需要进行服务器迁移，首先想到的当然是通过docker 基本步骤 编写dockerfile 这里非必须在应用根目录下进行dockerfile的建立及编写，但是为了后续方便，强烈建议
-在应用根目录新建Dockerfile文件 touch Dockerfile 内容 # 基础镜像，这里选用python3.8 FROM python:3.8 # 维护者（非必需） MAINTAINER &lt;your_name&gt; &lt;your_email&gt; # 指定工作目录 WORKDIR / # 将应用所需文件拷贝到容器中 COPY . / # 安装必要的python三方库，建议提前生成一个依赖库列表，为了后续的构建方便 # 这里推荐使用pipreqs三方库生成，这样能够最小化使用到的库数量 RUN pip install -r requirements.txt -i https://pypi.doubanio.com/simple # 暴露容器端口 EXPOSE &lt;port_used&gt;/tcp # 执行docker run会执行的命令，按照空格进行分割 CMD [&#34;python&#34;, &#34;/run.py&#34;] 构建docker镜像 docker build -t &lt;image_name&gt; &lt;Dockerfile_path&gt; // 这里需要强调的是 &lt;Dockerfile_path&gt; 一定需要是一个目录，而不是dockerfile本身 其他 将镜像打包为tar文件，方便迁移 docker save -o &lt;file_name.tar&gt; &lt;image_name&gt; 将迁移的tar文件导入为镜像 docker load --input &lt;file_name.tar&gt; 
-          
-        </div>
-
-        
-          <div>
-            <a class="read-more button" href="/posts/4/">Read more →</a>
           </div>
         
       </article>

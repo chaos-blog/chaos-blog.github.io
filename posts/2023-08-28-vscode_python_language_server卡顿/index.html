@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>VsCode中，Python插件的Python Language Server造成的卡顿问题 :: Chaos</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="症状提要 使用VsCode很长时间了，作为Python的主力开发IDE真的蛮不错，但是最近在连接服务器进行远程开发时，总是会遇到代码提示完全出不来，整个VSCode像是一个完全没有任何代码功能的文本编辑器，摸黑写代码 经过一番痛苦的问题定位，发现log中有一点线索： Ctrl&#43;P打开命令面板，输入&amp;gt; Python: Language Server show output （忘记保留截图了）日志里有很明显的language-server启动行，但是启动之后一直在检索整个项目文件夹，在超过timeout之后会报出一条wraning提示说&amp;quot;检索时间过长&amp;quot;，但是很明显，server仍然会在后台继续检索，并不会抛出异常 到这里，问题线索就比较清晰了，我的文件夹下包含有大量的非代码文件（如数据集/音频wav/音频flac等），vscode的python-laguage-server不停的在检索这类文件，在未检索完成之前是不会有任何代码提示的 解决方案 pyrightconfig.json是python-language-server的配置文件,可以通过在配置文件中指定排除项来跳过其对该目录项的检索,从而加速整个检索过程,解决vsc卡顿的问题 配置示例: { &amp;#34;exclude&amp;#34;: [ &amp;#34;data&amp;#34; ] } 其中，exclude项是一个数组，可以自由增加所需要忽略的项，遵循.*ignore的书写规范 注意 该文件只能放在项目根目录，我尝试过放在.vscode下，language-server并不会主动读取 " />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="/posts/2023-08-28-vscode_python_language_server%E5%8D%A1%E9%A1%BF/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/styles.css">
+
+
+
+
+
+
+
+  <link rel="shortcut icon" href="/img/theme-colors/blue.png">
+  <link rel="apple-touch-icon" href="/img/theme-colors/blue.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="" />
+  
+    <meta name="twitter:creator" content="Chaos" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="VsCode中，Python插件的Python Language Server造成的卡顿问题">
+<meta property="og:description" content="症状提要 使用VsCode很长时间了，作为Python的主力开发IDE真的蛮不错，但是最近在连接服务器进行远程开发时，总是会遇到代码提示完全出不来，整个VSCode像是一个完全没有任何代码功能的文本编辑器，摸黑写代码 经过一番痛苦的问题定位，发现log中有一点线索： Ctrl&#43;P打开命令面板，输入&amp;gt; Python: Language Server show output （忘记保留截图了）日志里有很明显的language-server启动行，但是启动之后一直在检索整个项目文件夹，在超过timeout之后会报出一条wraning提示说&amp;quot;检索时间过长&amp;quot;，但是很明显，server仍然会在后台继续检索，并不会抛出异常 到这里，问题线索就比较清晰了，我的文件夹下包含有大量的非代码文件（如数据集/音频wav/音频flac等），vscode的python-laguage-server不停的在检索这类文件，在未检索完成之前是不会有任何代码提示的 解决方案 pyrightconfig.json是python-language-server的配置文件,可以通过在配置文件中指定排除项来跳过其对该目录项的检索,从而加速整个检索过程,解决vsc卡顿的问题 配置示例: { &amp;#34;exclude&amp;#34;: [ &amp;#34;data&amp;#34; ] } 其中，exclude项是一个数组，可以自由增加所需要忽略的项，遵循.*ignore的书写规范 注意 该文件只能放在项目根目录，我尝试过放在.vscode下，language-server并不会主动读取 " />
+<meta property="og:url" content="/posts/2023-08-28-vscode_python_language_server%E5%8D%A1%E9%A1%BF/" />
+<meta property="og:site_name" content="Chaos" />
+
+  
+    <meta property="og:image" content="/img/favicon/blue.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="blue">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Square-one
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="posts/about">About</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="posts/about" >About</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="/posts/2023-08-28-vscode_python_language_server%E5%8D%A1%E9%A1%BF/">VsCode中，Python插件的Python Language Server造成的卡顿问题</a>
+  </h1>
+  <div class="post-meta">
+    
+    
+      <span class="post-author">Chaos</span>
+    
+    
+      <span class="post-reading-time">:: 1 min read (23 words)</span>
+    
+  </div>
+
+  
+  
+
+
+  
+    <div class="table-of-contents">
+      <h2>
+        目录
+      </h2>
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#症状提要">症状提要</a></li>
+    <li><a href="#解决方案">解决方案</a></li>
+    <li><a href="#注意">注意</a></li>
+  </ul>
+</nav>
+    </div>
+  
+
+  <div class="post-content"><div>
+        <h2 id="症状提要">症状提要<a href="#症状提要" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>使用VsCode很长时间了，作为Python的主力开发IDE真的蛮不错，但是最近在连接服务器进行远程开发时，总是会遇到代码提示完全出不来，整个VSCode像是一个完全没有任何代码功能的文本编辑器，摸黑写代码</li>
+<li>经过一番痛苦的问题定位，发现log中有一点线索：
+<ul>
+<li>Ctrl+P打开命令面板，输入<code>&gt; Python: Language Server show output</code></li>
+<li>（忘记保留截图了）日志里有很明显的language-server启动行，但是启动之后一直在检索整个项目文件夹，在超过timeout之后会报出一条wraning提示说&quot;检索时间过长&quot;，但是很明显，server仍然会在后台继续检索，并不会抛出异常</li>
+</ul>
+</li>
+<li>到这里，问题线索就比较清晰了，我的文件夹下包含有大量的非代码文件（如数据集/音频wav/音频flac等），vscode的python-laguage-server不停的在检索这类文件，在未检索完成之前是不会有任何代码提示的</li>
+</ul>
+<h2 id="解决方案">解决方案<a href="#解决方案" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li><code>pyrightconfig.json</code>是python-language-server的配置文件,可以通过在配置文件中指定排除项来跳过其对该目录项的检索,从而加速整个检索过程,解决vsc卡顿的问题</li>
+<li>配置示例:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;exclude&#34;</span>: [
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;data&#34;</span>
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>其中，<code>exclude</code>项是一个数组，可以自由增加所需要忽略的项，遵循<code>.*ignore</code>的书写规范</li>
+</ul>
+<h2 id="注意">注意<a href="#注意" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>该文件只能放在项目根目录，我尝试过放在<code>.vscode</code>下，language-server并不会主动读取</li>
+</ul>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="/posts/14/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Treafik反代保姆级急速上手</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="/posts/3/">
+                <span class="button__text">windows下使用wsl2初体验</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2023 Powered by <a href="http://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

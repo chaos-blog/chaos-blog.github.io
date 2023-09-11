@@ -5,7 +5,7 @@
     <link>/</link>
     <description>Recent content on Chaos</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <language>en</language>
     <lastBuildDate>Tue, 25 Apr 2023 08:37:18 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>交换机中的“镜像”</title>
@@ -738,6 +738,44 @@ Traefik主服务启动前 静态配置 静态配置需要在主服务启动之�
 &lt;li&gt;Traefik给我这种不愿意记忆乱七八糟端口的懒人提供了非常方便简单的一键配置&lt;/li&gt;
 &lt;li&gt;该文只是给想体验Traefik的同学一个快速、简单的上手路线，以最简单、我能理解的方式将Traefik的主要概念、配置项进行解释并给出示例&lt;/li&gt;
 &lt;li&gt;由于本人水平有限，有些地方可能存在错误或者理解不到位，feel free to ask any questions!&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>VsCode中，Python插件的Python Language Server造成的卡顿问题</title>
+      <link>/posts/2023-08-28-vscode_python_language_server%E5%8D%A1%E9%A1%BF/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023-08-28-vscode_python_language_server%E5%8D%A1%E9%A1%BF/</guid>
+      <description>症状提要 使用VsCode很长时间了，作为Python的主力开发IDE真的蛮不错，但是最近在连接服务器进行远程开发时，总是会遇到代码提示完全出不来，整个VSCode像是一个完全没有任何代码功能的文本编辑器，摸黑写代码 经过一番痛苦的问题定位，发现log中有一点线索： Ctrl+P打开命令面板，输入&amp;gt; Python: Language Server show output （忘记保留截图了）日志里有很明显的language-server启动行，但是启动之后一直在检索整个项目文件夹，在超过timeout之后会报出一条wraning提示说&amp;quot;检索时间过长&amp;quot;，但是很明显，server仍然会在后台继续检索，并不会抛出异常 到这里，问题线索就比较清晰了，我的文件夹下包含有大量的非代码文件（如数据集/音频wav/音频flac等），vscode的python-laguage-server不停的在检索这类文件，在未检索完成之前是不会有任何代码提示的 解决方案 pyrightconfig.json是python-language-server的配置文件,可以通过在配置文件中指定排除项来跳过其对该目录项的检索,从而加速整个检索过程,解决vsc卡顿的问题 配置示例: { &amp;#34;exclude&amp;#34;: [ &amp;#34;data&amp;#34; ] } 其中，exclude项是一个数组，可以自由增加所需要忽略的项，遵循.*ignore的书写规范 注意 该文件只能放在项目根目录，我尝试过放在.vscode下，language-server并不会主动读取 </description>
+      <content>&lt;h2 id=&#34;症状提要&#34;&gt;症状提要&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;使用VsCode很长时间了，作为Python的主力开发IDE真的蛮不错，但是最近在连接服务器进行远程开发时，总是会遇到代码提示完全出不来，整个VSCode像是一个完全没有任何代码功能的文本编辑器，摸黑写代码&lt;/li&gt;
+&lt;li&gt;经过一番痛苦的问题定位，发现log中有一点线索：
+&lt;ul&gt;
+&lt;li&gt;Ctrl+P打开命令面板，输入&lt;code&gt;&amp;gt; Python: Language Server show output&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;（忘记保留截图了）日志里有很明显的language-server启动行，但是启动之后一直在检索整个项目文件夹，在超过timeout之后会报出一条wraning提示说&amp;quot;检索时间过长&amp;quot;，但是很明显，server仍然会在后台继续检索，并不会抛出异常&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;到这里，问题线索就比较清晰了，我的文件夹下包含有大量的非代码文件（如数据集/音频wav/音频flac等），vscode的python-laguage-server不停的在检索这类文件，在未检索完成之前是不会有任何代码提示的&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;pyrightconfig.json&lt;/code&gt;是python-language-server的配置文件,可以通过在配置文件中指定排除项来跳过其对该目录项的检索,从而加速整个检索过程,解决vsc卡顿的问题&lt;/li&gt;
+&lt;li&gt;配置示例:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#f92672&#34;&gt;&amp;#34;exclude&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;data&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;其中，&lt;code&gt;exclude&lt;/code&gt;项是一个数组，可以自由增加所需要忽略的项，遵循&lt;code&gt;.*ignore&lt;/code&gt;的书写规范&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;注意&#34;&gt;注意&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;该文件只能放在项目根目录，我尝试过放在&lt;code&gt;.vscode&lt;/code&gt;下，language-server并不会主动读取&lt;/li&gt;
 &lt;/ul&gt;
 </content>
     </item>

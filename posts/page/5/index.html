@@ -132,6 +132,43 @@
     
       <article class="post on-list">
         <h1 class="post-title">
+          <a href="/posts/7/">深度神经网络中seed函数</a>
+        </h1>
+        <div class="post-meta">
+          
+          
+            <span class="post-author">chaos</span>
+          
+        </div>
+
+        
+          <span class="post-tags">
+            
+            #<a href="/tags/python/">Python</a>&nbsp;
+            
+            #<a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>&nbsp;
+            
+          </span>
+        
+
+        
+
+
+        <div class="post-content">
+          
+            背景 在阅读代码过程中经常发现以下几种代码，尤其常见于pytorch书写的深度神经网络代码中 torch.manual_seed(seed) torch.cuda.manual_seed(seed) np.random.seed(seed) torch.cuda.manual_seed_all() 正文 经查询资料得出结论，该代码作用即为将模型在初始化过程中所用到的“随机数”全部固定下来，以保证每次重新训练模型需要初始化模型参数的时候能够得到相同的初始化参数，从而达到稳定复现训练结果的目的 参考资料 https://www.zhihu.com/question/288350769 https://cloud.tencent.com/developer/article/1149041 
+          
+        </div>
+
+        
+          <div>
+            <a class="read-more button" href="/posts/7/">Read more →</a>
+          </div>
+        
+      </article>
+    
+      <article class="post on-list">
+        <h1 class="post-title">
           <a href="/posts/18/">简单的shell脚本搭配Crontab实现linux定时备份设定文件(夹)</a>
         </h1>
         <div class="post-meta">
